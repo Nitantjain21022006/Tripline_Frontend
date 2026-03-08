@@ -60,7 +60,7 @@ function CarriersTab() {
     const [form, setForm] = useState({ name: '', contactEmail: '', contactPhone: '', logoUrl: '' })
     const [loading, setLoading] = useState(false)
 
-    const load = () => adminApi.getCarriers().then(r => setCarriers(r.data)).catch(() => { })
+    const load = () => adminApi.getCarriers().then(r => setCarriers(Array.isArray(r.data) ? r.data : [])).catch(() => { })
     useEffect(() => { load() }, [])
 
     const submit = async (e) => {
@@ -102,7 +102,7 @@ function VehiclesTab() {
     const [loading, setLoading] = useState(false)
 
     const load = () => Promise.all([adminApi.getVehicles(), adminApi.getCarriers()])
-        .then(([v, c]) => { setVehicles(v.data); setCarriers(c.data); if (c.data[0]) setForm(f => ({ ...f, carrierId: c.data[0].id })) })
+        .then(([v, c]) => { const vArr = Array.isArray(v.data) ? v.data : []; const cArr = Array.isArray(c.data) ? c.data : []; setVehicles(vArr); setCarriers(cArr); if (cArr[0]) setForm(f => ({ ...f, carrierId: cArr[0].id })) })
         .catch(() => { })
     useEffect(() => { load() }, [])
 
@@ -153,7 +153,7 @@ function StationsTab() {
     const [form, setForm] = useState({ name: '', city: '', state: '', country: 'India', type: 'AIRPORT', latitude: '', longitude: '' })
     const [loading, setLoading] = useState(false)
 
-    const load = () => adminApi.getStations().then(r => setStations(r.data)).catch(() => { })
+    const load = () => adminApi.getStations().then(r => setStations(Array.isArray(r.data) ? r.data : [])).catch(() => { })
     useEffect(() => { load() }, [])
 
     const submit = async (e) => {
@@ -201,76 +201,189 @@ function TripsTab() {
     const [trips, setTrips] = useState([])
     const [vehicles, setVehicles] = useState([])
     const [stations, setStations] = useState([])
+    const [selectedMode, setSelectedMode] = useState('FLIGHT')
     const [form, setForm] = useState({ vehicleId: '', originStationId: '', destinationStationId: '', departureTime: '', arrivalTime: '', price: '', distance: '', availableSeats: '' })
     const [loading, setLoading] = useState(false)
+    const [tripFilter, setTripFilter] = useState('ALL')
+
+    const MODE_CONFIG = {
+        FLIGHT: { label: 'Flight', icon: <Plane className="w-4 h-4" />, stationType: 'AIRPORT', color: 'sky', badge: 'badge-flight' },
+        TRAIN: { label: 'Train', icon: <Train className="w-4 h-4" />, stationType: 'TRAIN_STATION', color: 'emerald', badge: 'badge-train' },
+        BUS: { label: 'Bus', icon: <Bus className="w-4 h-4" />, stationType: 'BUS_TERMINAL', color: 'amber', badge: 'badge-bus' },
+    }
 
     const load = () => Promise.all([adminApi.getTrips(), adminApi.getVehicles(), adminApi.getStations()])
         .then(([t, v, s]) => {
-            setTrips(t.data); setVehicles(v.data); setStations(s.data)
-            if (v.data[0]) setForm(f => ({ ...f, vehicleId: v.data[0].id }))
-            if (s.data[0]) setForm(f => ({ ...f, originStationId: s.data[0].id, destinationStationId: s.data[0].id }))
+            setTrips(Array.isArray(t.data) ? t.data : []); setVehicles(Array.isArray(v.data) ? v.data : []); setStations(Array.isArray(s.data) ? s.data : [])
         }).catch(() => { })
     useEffect(() => { load() }, [])
+
+    // Filter vehicles and stations based on selected mode
+    const filteredVehicles = vehicles.filter(v => v.transportMode === selectedMode)
+    const filteredStations = stations.filter(s => s.type === MODE_CONFIG[selectedMode].stationType)
+
+    // Auto-select first vehicle/station when mode changes
+    useEffect(() => {
+        const firstVehicle = filteredVehicles[0]
+        const firstStation = filteredStations[0]
+        setForm(f => ({
+            ...f,
+            vehicleId: firstVehicle ? String(firstVehicle.id) : '',
+            originStationId: firstStation ? String(firstStation.id) : '',
+            destinationStationId: firstStation ? String(firstStation.id) : '',
+        }))
+    }, [selectedMode, vehicles, stations])
 
     const submit = async (e) => {
         e.preventDefault(); setLoading(true)
         try {
             await adminApi.createTrip({ ...form, price: Number(form.price), distance: Number(form.distance), availableSeats: Number(form.availableSeats), isActive: true })
             toast.success('Trip added!'); load()
+            setForm(f => ({ ...f, departureTime: '', arrivalTime: '', price: '', distance: '', availableSeats: '' }))
         } catch (err) { toast.error(err.response?.data?.message || 'Failed') }
         finally { setLoading(false) }
     }
 
     const dateInputProps = { type: 'datetime-local', className: 'input-field' }
+    const currentCfg = MODE_CONFIG[selectedMode]
+
+    // Filter trips for the list
+    const displayedTrips = tripFilter === 'ALL' ? trips : trips.filter(t => t.transportMode === tripFilter)
 
     return (
-        <div className="grid lg:grid-cols-2 gap-6">
-            <form onSubmit={submit} className="glass-card p-5 space-y-4">
-                <h3 className="text-white font-semibold">Add Trip</h3>
-                <Field label="Vehicle">
-                    <select value={form.vehicleId} onChange={e => setForm({ ...form, vehicleId: e.target.value })} className="input-field">
-                        {vehicles.map(v => <option key={v.id} value={v.id}>{v.name} ({v.transportMode})</option>)}
-                    </select>
-                </Field>
-                <div className="grid grid-cols-2 gap-3">
-                    <Field label="Origin Station">
-                        <select value={form.originStationId} onChange={e => setForm({ ...form, originStationId: e.target.value })} className="input-field">
-                            {stations.map(s => <option key={s.id} value={s.id}>{s.city} – {s.name}</option>)}
-                        </select>
-                    </Field>
-                    <Field label="Destination Station">
-                        <select value={form.destinationStationId} onChange={e => setForm({ ...form, destinationStationId: e.target.value })} className="input-field">
-                            {stations.map(s => <option key={s.id} value={s.id}>{s.city} – {s.name}</option>)}
-                        </select>
-                    </Field>
+        <div className="space-y-6">
+            {/* ── Transport Mode Selector ── */}
+            <div className="glass-card p-4">
+                <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-3">Select Transport Mode</p>
+                <div className="flex gap-2">
+                    {Object.entries(MODE_CONFIG).map(([mode, cfg]) => {
+                        const isActive = selectedMode === mode
+                        const colorMap = { sky: 'bg-sky-500/20 border-sky-500/40 text-sky-400 shadow-sky-500/20', emerald: 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400 shadow-emerald-500/20', amber: 'bg-amber-500/20 border-amber-500/40 text-amber-400 shadow-amber-500/20' }
+                        return (
+                            <button key={mode} type="button" onClick={() => setSelectedMode(mode)}
+                                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-all duration-200 ${isActive
+                                    ? `${colorMap[cfg.color]} shadow-lg`
+                                    : 'bg-dark-700/50 border-white/5 text-gray-500 hover:text-gray-300 hover:border-white/10'}`}>
+                                {cfg.icon}
+                                {cfg.label}
+                            </button>
+                        )
+                    })}
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                    <Field label="Departure"><input {...dateInputProps} required value={form.departureTime} onChange={e => setForm({ ...form, departureTime: e.target.value })} /></Field>
-                    <Field label="Arrival"><input {...dateInputProps} required value={form.arrivalTime} onChange={e => setForm({ ...form, arrivalTime: e.target.value })} /></Field>
-                </div>
-                <div className="grid grid-cols-3 gap-3">
-                    <Field label="Price (₹)"><Input type="number" min="0" required value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="1200" /></Field>
-                    <Field label="Distance (km)"><Input type="number" min="0" required value={form.distance} onChange={e => setForm({ ...form, distance: e.target.value })} placeholder="540" /></Field>
-                    <Field label="Seats"><Input type="number" min="1" required value={form.availableSeats} onChange={e => setForm({ ...form, availableSeats: e.target.value })} placeholder="180" /></Field>
-                </div>
-                <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
-                    {loading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Plus className="w-4 h-4" />}
-                    Add Trip
-                </button>
-            </form>
-            <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
-                <h3 className="text-white font-semibold">Trips ({trips.length})</h3>
-                {trips.map(t => (
-                    <div key={t.id} className="flex items-center justify-between p-3 bg-dark-700 rounded-xl">
-                        <div>
-                            <p className="text-white text-sm font-medium">{t.originStation?.city} → {t.destinationStation?.city}</p>
-                            <p className="text-gray-500 text-xs">{t.transportMode} • ₹{t.price} • {new Date(t.departureTime).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</p>
-                        </div>
-                        <button onClick={() => adminApi.deleteTrip(t.id).then(load).catch(() => toast.error('Failed'))}
-                            className="text-red-400 hover:text-red-300 p-1"><Trash2 className="w-3.5 h-3.5" /></button>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-6">
+                {/* ── Add Trip Form ── */}
+                <form onSubmit={submit} className="glass-card p-6 space-y-5">
+                    <div className="flex items-center gap-2">
+                        <span className={`mode-icon-${currentCfg.color === 'sky' ? 'flight' : selectedMode.toLowerCase()}`}>{currentCfg.icon}</span>
+                        <h3 className="text-white font-semibold text-lg">Add {currentCfg.label} Trip</h3>
                     </div>
-                ))}
-                {trips.length === 0 && <p className="text-gray-600 text-sm">No trips yet.</p>}
+
+                    {/* Section: Vehicle */}
+                    <div className="space-y-3">
+                        <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold border-b border-white/5 pb-2">Vehicle</p>
+                        <Field label={`${currentCfg.label} Vehicle`}>
+                            <select value={form.vehicleId} onChange={e => setForm({ ...form, vehicleId: e.target.value })} className="input-field" required>
+                                {filteredVehicles.length === 0 && <option value="">— No {currentCfg.label.toLowerCase()} vehicles —</option>}
+                                {filteredVehicles.map(v => <option key={v.id} value={v.id}>{v.name} • {v.carrier?.name || 'Unknown Carrier'} • {v.capacity} seats</option>)}
+                            </select>
+                        </Field>
+                    </div>
+
+                    {/* Section: Route */}
+                    <div className="space-y-3">
+                        <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold border-b border-white/5 pb-2">Route</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <Field label="Origin">
+                                <select value={form.originStationId} onChange={e => setForm({ ...form, originStationId: e.target.value })} className="input-field" required>
+                                    {filteredStations.length === 0 && <option value="">— No {currentCfg.label.toLowerCase()} stations —</option>}
+                                    {filteredStations.map(s => <option key={s.id} value={s.id}>{s.city} – {s.name}</option>)}
+                                </select>
+                            </Field>
+                            <Field label="Destination">
+                                <select value={form.destinationStationId} onChange={e => setForm({ ...form, destinationStationId: e.target.value })} className="input-field" required>
+                                    {filteredStations.length === 0 && <option value="">— No {currentCfg.label.toLowerCase()} stations —</option>}
+                                    {filteredStations.map(s => <option key={s.id} value={s.id}>{s.city} – {s.name}</option>)}
+                                </select>
+                            </Field>
+                        </div>
+                    </div>
+
+                    {/* Section: Schedule */}
+                    <div className="space-y-3">
+                        <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold border-b border-white/5 pb-2">Schedule</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <Field label="Departure"><input {...dateInputProps} required value={form.departureTime} onChange={e => setForm({ ...form, departureTime: e.target.value })} /></Field>
+                            <Field label="Arrival"><input {...dateInputProps} required value={form.arrivalTime} onChange={e => setForm({ ...form, arrivalTime: e.target.value })} /></Field>
+                        </div>
+                    </div>
+
+                    {/* Section: Pricing & Capacity */}
+                    <div className="space-y-3">
+                        <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold border-b border-white/5 pb-2">Pricing & Capacity</p>
+                        <div className="grid grid-cols-3 gap-3">
+                            <Field label="Price (₹)"><Input type="number" min="0" required value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="1200" /></Field>
+                            <Field label="Distance (km)"><Input type="number" min="0" required value={form.distance} onChange={e => setForm({ ...form, distance: e.target.value })} placeholder="540" /></Field>
+                            <Field label="Seats"><Input type="number" min="1" required value={form.availableSeats} onChange={e => setForm({ ...form, availableSeats: e.target.value })} placeholder="180" /></Field>
+                        </div>
+                    </div>
+
+                    <button type="submit" disabled={loading || filteredVehicles.length === 0 || filteredStations.length === 0}
+                        className="btn-primary w-full flex items-center justify-center gap-2 mt-2">
+                        {loading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Plus className="w-4 h-4" />}
+                        Add {currentCfg.label} Trip
+                    </button>
+
+                    {(filteredVehicles.length === 0 || filteredStations.length === 0) && (
+                        <p className="text-amber-400/80 text-xs text-center">
+                            ⚠️ Please add {filteredVehicles.length === 0 ? `${currentCfg.label} vehicles` : ''}{filteredVehicles.length === 0 && filteredStations.length === 0 ? ' and ' : ''}{filteredStations.length === 0 ? `${currentCfg.label} stations` : ''} first.
+                        </p>
+                    )}
+                </form>
+
+                {/* ── Existing Trips List ── */}
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h3 className="text-white font-semibold">Trips ({displayedTrips.length})</h3>
+                        <div className="flex gap-1 bg-dark-800/60 p-1 rounded-lg border border-white/5">
+                            {['ALL', 'FLIGHT', 'TRAIN', 'BUS'].map(f => (
+                                <button key={f} type="button" onClick={() => setTripFilter(f)}
+                                    className={`text-xs px-2.5 py-1 rounded-md transition-all ${tripFilter === f ? 'bg-primary-600 text-white font-semibold' : 'text-gray-500 hover:text-gray-300'}`}>
+                                    {f === 'ALL' ? 'All' : MODE_CONFIG[f].label}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="space-y-2 max-h-[560px] overflow-y-auto pr-1">
+                        {displayedTrips.map(t => {
+                            const cfg = MODE_CONFIG[t.transportMode] || MODE_CONFIG.FLIGHT
+                            return (
+                                <div key={t.id} className="flex items-center justify-between p-3.5 bg-dark-700 rounded-xl hover:bg-dark-600/80 transition-colors group">
+                                    <div className="flex items-center gap-3 min-w-0">
+                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${t.transportMode === 'FLIGHT' ? 'bg-sky-500/15 text-sky-400' : t.transportMode === 'TRAIN' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'}`}>
+                                            {cfg.icon}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-white text-sm font-medium truncate">{t.originStation?.city} → {t.destinationStation?.city}</p>
+                                            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                                                <span className={cfg.badge}>{cfg.label}</span>
+                                                <span className="text-gray-500 text-xs">₹{Number(t.price).toLocaleString('en-IN')}</span>
+                                                <span className="text-gray-600 text-xs">•</span>
+                                                <span className="text-gray-500 text-xs">{new Date(t.departureTime).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' })}</span>
+                                                <span className="text-gray-600 text-xs">•</span>
+                                                <span className="text-gray-500 text-xs">{t.availableSeats} seats</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => adminApi.deleteTrip(t.id).then(load).catch(() => toast.error('Failed'))}
+                                        className="text-red-400/50 hover:text-red-400 p-1.5 opacity-0 group-hover:opacity-100 transition-all"><Trash2 className="w-3.5 h-3.5" /></button>
+                                </div>
+                            )
+                        })}
+                        {displayedTrips.length === 0 && <p className="text-gray-600 text-sm text-center py-8">No {tripFilter === 'ALL' ? '' : MODE_CONFIG[tripFilter]?.label.toLowerCase() + ' '}trips yet.</p>}
+                    </div>
+                </div>
             </div>
         </div>
     )
@@ -386,8 +499,8 @@ export default function AdminPage() {
                             key={t.id}
                             onClick={() => setTab(t.id)}
                             className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-all ${tab === t.id
-                                    ? 'bg-primary-600 text-white font-semibold shadow-lg shadow-primary-600/25'
-                                    : 'text-gray-400 hover:text-white'
+                                ? 'bg-primary-600 text-white font-semibold shadow-lg shadow-primary-600/25'
+                                : 'text-gray-400 hover:text-white'
                                 }`}
                         >
                             {t.icon}
