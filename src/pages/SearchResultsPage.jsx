@@ -57,7 +57,8 @@ export default function SearchResultsPage() {
                     <div className="flex items-center justify-between mb-4 animate-fade-in">
                         <p className="text-gray-400 text-sm">
                             <span className="text-white font-semibold">{routes.length}</span> routes found
-                            {searchParams && ` for ${searchParams.originCity} → ${searchParams.destinationCity}`}
+                            {searchParams && searchParams.originCity && searchParams.destinationCity && ` for ${searchParams.originCity} → ${searchParams.destinationCity}`}
+                            {searchParams && (!searchParams.originCity || !searchParams.destinationCity) && ` on ${searchParams.travelDate}`}
                         </p>
                     </div>
                 )}
@@ -99,9 +100,15 @@ export default function SearchResultsPage() {
                         <AlertCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
                         <h3 className="text-xl font-semibold text-gray-300 mb-2">No routes found</h3>
                         <p className="text-gray-500 text-sm max-w-md mx-auto">
-                            No trips were found between <strong>{searchParams.originCity}</strong> and{' '}
-                            <strong>{searchParams.destinationCity}</strong> on this date.
-                            Try a different date or check that the cities have active stations.
+                            {searchParams.originCity && searchParams.destinationCity ? (
+                                <>
+                                    No trips were found between <strong>{searchParams.originCity}</strong> and{' '}
+                                    <strong>{searchParams.destinationCity}</strong> on this date.
+                                </>
+                            ) : (
+                                <>No trips were found on this date.</>
+                            )}
+                            <br />Try a different date or check that the cities have active stations.
                         </p>
                     </div>
                 )}
