@@ -23,6 +23,12 @@ export function AuthProvider({ children }) {
 
     const register = async (data) => {
         const res = await authApi.register(data)
+        // Don't set user yet; verification required
+        return res.data
+    }
+
+    const verifyEmail = async (data) => {
+        const res = await authApi.verifyEmail(data)
         setUser(res.data)
         return res.data
     }
@@ -42,7 +48,7 @@ export function AuthProvider({ children }) {
     const isAuthenticated = !!user
 
     return (
-        <AuthContext.Provider value={{ user, loading, isAuthenticated, isAdmin, login, register, logout, updateProfile }}>
+        <AuthContext.Provider value={{ user, loading, isAuthenticated, isAdmin, login, register, verifyEmail, logout, updateProfile }}>
             {children}
         </AuthContext.Provider>
     )

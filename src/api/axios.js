@@ -26,6 +26,7 @@ api.interceptors.response.use(
 // Auth endpoints
 export const authApi = {
     register: (data) => api.post('/auth/register', data),
+    verifyEmail: (data) => api.post('/auth/verify-email', data),
     login: (data) => api.post('/auth/login', data),
     logout: () => api.post('/auth/logout'),
     getMe: () => api.get('/auth/me'),
@@ -50,6 +51,11 @@ export const bookingApi = {
     getUserBookings: () => api.get('/bookings/user'),
     getById: (id) => api.get(`/bookings/${id}`),
     cancel: (id) => api.delete(`/bookings/${id}`),
+}
+
+// Tickets
+export const ticketApi = {
+    download: (id) => api.get(`/tickets/${id}/download`, { responseType: 'blob' }),
 }
 
 // Payment

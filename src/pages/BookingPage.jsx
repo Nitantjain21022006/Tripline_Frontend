@@ -53,7 +53,7 @@ export default function BookingPage() {
                 tripIds,
                 passengers: passengers.map(p => ({ ...p, age: Number(p.age) }))
             })
-            const bookingId = bookingRes.data.id
+            const bookingId = bookingRes.data.bookingId
 
             // Step 2: Create Stripe checkout session
             const sessionRes = await paymentApi.createSession({ bookingId })

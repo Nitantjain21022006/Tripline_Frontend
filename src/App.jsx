@@ -11,6 +11,7 @@ import DashboardPage from './pages/DashboardPage'
 import AdminPage from './pages/AdminPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
+import VerifyEmailPage from './pages/VerifyEmailPage'
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
@@ -48,10 +49,11 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
         <Route path="/booking" element={
           <ProtectedRoute><BookingPage /></ProtectedRoute>
         } />
-        <Route path="/payment-confirmation" element={
+        <Route path="/booking-confirmation" element={
           <ProtectedRoute><PaymentSuccessPage /></ProtectedRoute>
         } />
         <Route path="/dashboard" element={

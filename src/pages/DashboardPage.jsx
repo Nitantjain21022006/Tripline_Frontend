@@ -42,7 +42,7 @@ function BookingCard({ booking }) {
             <div className="p-5 flex items-center justify-between gap-4">
                 <div>
                     <div className="flex items-center gap-2 mb-1">
-                        <span className="text-white font-bold">Booking #{booking.id}</span>
+                        <span className="text-white font-bold">Booking #{booking.bookingId}</span>
                         <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border ${STATUS_STYLES[booking.status] || STATUS_STYLES.PENDING}`}>
                             {STATUS_ICON[booking.status]}
                             {booking.status}
@@ -140,7 +140,7 @@ export default function DashboardPage() {
                         </div>
                     ) : (
                         <div className="space-y-4">
-                            {bookings.map(b => <BookingCard key={b.id} booking={b} />)}
+                            {bookings.map(b => <BookingCard key={b.bookingId} booking={b} />)}
                         </div>
                     )}
                 </div>

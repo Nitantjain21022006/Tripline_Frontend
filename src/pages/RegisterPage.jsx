@@ -7,18 +7,18 @@ import { UserPlus, Eye, EyeOff, Plane } from 'lucide-react'
 export default function RegisterPage() {
     const { register } = useAuth()
     const navigate = useNavigate()
-    const [form, setForm] = useState({ name: '', email: '', password: '', phone: '' })
+    const [form, setForm] = useState({ name: '', email: '', password: '', phone: '', role: 'USER' })
     const [showPwd, setShowPwd] = useState(false)
     const [loading, setLoading] = useState(false)
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (form.password.length < 6) { toast.error('Password must be at least 6 characters'); return }
+        if (form.password.length < 8) { toast.error('Password must be at least 8 characters'); return }
         setLoading(true)
         try {
             await register(form)
-            toast.success('Account created! Welcome to Tripline 🎉')
-            navigate('/dashboard')
+            toast.success('Account created! Please verify your email 📧')
+            navigate('/verify-email', { state: { email: form.email } })
         } catch (err) {
             toast.error(err.response?.data?.message || 'Registration failed')
         } finally {
@@ -58,6 +58,15 @@ export default function RegisterPage() {
                         <label className="block text-sm font-medium text-gray-300 mb-2">Phone (optional)</label>
                         <input type="tel" value={form.phone} onChange={set('phone')}
                             className="input-field" placeholder="+91 98765 43210" />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-300 mb-2">I am a...</label>
+                        <select value={form.role} onChange={set('role')} required
+                            className="input-field appearance-none bg-gray-800/50">
+                            <option value="USER" className="bg-gray-800">Traveler</option>
+                            <option value="ADMIN" className="bg-gray-800">Administrator</option>
+                        </select>
                     </div>
 
                     <div>
