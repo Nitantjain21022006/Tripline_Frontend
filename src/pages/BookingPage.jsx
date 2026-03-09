@@ -133,24 +133,29 @@ export default function BookingPage() {
         const tripId = getCurrentLegTripId()
         const mode = getCurrentTransportMode()
 
+        // For trains: seatNo in API must be "coachNo:seatNo" composite
+        const lockKey = (mode === 'TRAIN' && seat.coachNo)
+            ? `${seat.coachNo}:${seat.seatNo}`
+            : seat.seatNo
+
         // Check if this passenger already has a seat
         const legAssignments = seatAssignments[currentLegIdx] || {}
         if (legAssignments[pendingPassengerIdx]) {
-            // Unlock old seat first
-            await handleUnlockSeat(tripId, legAssignments[pendingPassengerIdx].seatNo, mode)
+            // Unlock old seat first (using the stored lockKey)
+            const oldSeat = legAssignments[pendingPassengerIdx]
+            const oldLockKey = oldSeat._lockKey || oldSeat.seatNo
+            await handleUnlockSeat(tripId, oldLockKey, mode)
         }
 
         // Lock the new seat via API
-        const locked = await handleLockSeat(tripId, seat.seatNo, mode)
+        const locked = await handleLockSeat(tripId, lockKey, mode)
         if (!locked) return
-
-        const seatKey = seat.coachNo ? `${seat.coachNo}:${seat.seatNo}` : seat.seatNo
 
         setSeatAssignments(prev => ({
             ...prev,
             [currentLegIdx]: {
                 ...(prev[currentLegIdx] || {}),
-                [pendingPassengerIdx]: { ...seat, _seatKey: seatKey }
+                [pendingPassengerIdx]: { ...seat, _lockKey: lockKey }
             }
         }))
 
@@ -168,7 +173,8 @@ export default function BookingPage() {
         const mode = getCurrentTransportMode()
         const seat = (seatAssignments[currentLegIdx] || {})[passengerIdx]
         if (seat) {
-            await handleUnlockSeat(tripId, seat.seatNo, mode)
+            const lockKey = seat._lockKey || seat.seatNo
+            await handleUnlockSeat(tripId, lockKey, mode)
             setSeatAssignments(prev => {
                 const legAssignments = { ...(prev[currentLegIdx] || {}) }
                 delete legAssignments[passengerIdx]
