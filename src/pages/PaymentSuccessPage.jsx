@@ -92,14 +92,33 @@ export default function PaymentSuccessPage() {
                                                     <div className="flex items-center gap-3 mb-4">
                                                         <span className="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-400 text-[10px] font-black uppercase">Leg {idx + 1}</span>
                                                         <span className="text-white/40 text-xs">ID: TL-{ticket.ticketId}</span>
+                                                        <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[10px] font-bold uppercase">{ticket.transportMode}</span>
                                                     </div>
-                                                    <div className="flex items-center gap-4 mb-2">
+                                                    <div className="flex items-center gap-4 mb-3">
                                                         <span className="text-xl font-bold text-white">{ticket.originCity}</span>
                                                         <ArrowRight className="w-4 h-4 text-emerald-500" />
                                                         <span className="text-xl font-bold text-white">{ticket.destinationCity}</span>
                                                     </div>
-                                                    <div className="text-sm text-gray-400 font-medium">
-                                                        Passenger: <span className="text-white">{ticket.passengerName}</span> • Seat: <span className="text-white">{ticket.seatNumber || 'Unassigned'}</span>
+                                                    <div className="space-y-1 text-sm text-gray-400">
+                                                        <div>
+                                                            Passenger: <span className="text-white font-semibold">{ticket.passengerName}</span>
+                                                        </div>
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <span>Seat:</span>
+                                                            <span className="text-emerald-400 font-bold text-base">
+                                                                {ticket.coachNumber ? `${ticket.coachNumber} - ` : ''}{ticket.seatNumber || 'General'}
+                                                            </span>
+                                                            {ticket.seatClass && (
+                                                                <span className="px-2 py-0.5 bg-purple-500/20 text-purple-300 rounded text-xs font-semibold border border-purple-500/30">
+                                                                    {ticket.seatClass}
+                                                                </span>
+                                                            )}
+                                                            {ticket.berthType && (
+                                                                <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded text-xs font-semibold border border-amber-500/30">
+                                                                    {ticket.berthType === 'L' ? 'Lower' : ticket.berthType === 'M' ? 'Middle' : ticket.berthType === 'U' ? 'Upper' : ticket.berthType === 'SL' ? 'Side Lower' : ticket.berthType === 'SU' ? 'Side Upper' : ticket.berthType} Berth
+                                                                </span>
+                                                            )}
+                                                        </div>
                                                     </div>
                                                 </div>
 

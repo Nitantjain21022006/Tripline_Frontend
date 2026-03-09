@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Clock, IndianRupee, ArrowRight, ChevronDown, ChevronUp, Plane, Train, Bus, Zap } from 'lucide-react'
+import { Clock, ArrowRight, ChevronDown, ChevronUp, Plane, Train, Bus } from 'lucide-react'
 import JourneyTimeline from './JourneyTimeline'
 
 function formatDuration(minutes) {
@@ -19,11 +19,36 @@ const MiniModeIcon = ({ mode }) => {
     return <Bus className="w-3.5 h-3.5 text-amber-400" />
 }
 
+/** IRCTC-style class availability badge */
+function SeatClassBadge({ className, count, price }) {
+    const isLow = count <= 5
+    const isMed = count > 5 && count <= 20
+    return (
+        <div className={`flex flex-col items-center px-3 py-1.5 rounded-lg border text-center min-w-[80px] transition-colors
+            ${isLow ? 'bg-red-500/10 border-red-500/30' : isMed ? 'bg-amber-500/10 border-amber-500/30' : 'bg-emerald-500/10 border-emerald-500/30'}`}>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider truncate max-w-[72px]">{className}</span>
+            <span className={`text-sm font-bold ${isLow ? 'text-red-400' : isMed ? 'text-amber-400' : 'text-emerald-400'}`}>
+                {count} left
+            </span>
+            {price && (
+                <span className="text-[10px] text-gray-500 mt-0.5">₹{Number(price).toLocaleString('en-IN')}</span>
+            )}
+        </div>
+    )
+}
+
 export default function JourneyCard({ route, onSelect, selected = false }) {
     const [expanded, setExpanded] = useState(false)
     const { legs = [], totalPrice, totalDurationMinutes, transfers, departureTime, arrivalTime, totalLayoverMinutes } = route
 
     const uniqueModes = [...new Set(legs.map(l => l.transportMode))]
+
+    // Aggregate availability across all legs (show first leg's availability for single-leg, summary for multi-leg)
+    const primaryLeg = legs[0]
+    const availability = primaryLeg?.availability || {}
+    const classPrices = primaryLeg?.classPrices || {}
+    const hasClassData = Object.keys(availability).length > 0
+    const fallbackSeats = primaryLeg?.availableSeats
 
     return (
         <div className={`glass-card overflow-hidden transition-all duration-300 hover:border-primary-500/30 cursor-pointer
@@ -86,13 +111,38 @@ export default function JourneyCard({ route, onSelect, selected = false }) {
                     </div>
                 </div>
 
+                {/* IRCTC-style Class Availability Badges */}
+                {hasClassData && (
+                    <div className="mt-4 flex items-center gap-2 flex-wrap">
+                        <span className="text-[10px] text-gray-600 uppercase tracking-wider font-semibold">Availability:</span>
+                        {Object.entries(availability).map(([cls, count]) => (
+                            <SeatClassBadge
+                                key={cls}
+                                className={cls}
+                                count={count}
+                                price={classPrices[cls]}
+                            />
+                        ))}
+                    </div>
+                )}
+                {!hasClassData && fallbackSeats !== undefined && fallbackSeats !== null && (
+                    <div className="mt-3 flex items-center gap-2">
+                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border
+                            ${fallbackSeats <= 5 ? 'bg-red-500/10 border-red-500/30 text-red-400'
+                                : fallbackSeats <= 20 ? 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+                                    : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'}`}>
+                            {fallbackSeats} seats available
+                        </span>
+                    </div>
+                )}
+
                 {/* Expand Toggle */}
                 <button
                     className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-300 mt-3 transition-colors"
                     onClick={(e) => { e.stopPropagation(); setExpanded(v => !v) }}
                 >
                     {expanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-                    {expanded ? 'Hide details' : 'Show flight details'}
+                    {expanded ? 'Hide details' : 'Show journey details'}
                 </button>
             </div>
 

@@ -63,6 +63,15 @@ export const paymentApi = {
     createSession: (data) => api.post('/payment/create-session', data),
 }
 
+// Seats
+export const seatApi = {
+    getSeatMap: (tripId) => api.get(`/seats/${tripId}`),
+    getCoachSeats: (tripId, coachNo) => api.get(`/seats/${tripId}/coach/${coachNo}`),
+    lockSeat: (tripId, seatNo) => api.post('/seats/lock', { tripId, seatNo }),
+    unlockSeat: (tripId, seatNo) => api.post('/seats/unlock', { tripId, seatNo }),
+    getLockTimer: (tripId, seatNo) => api.get(`/seats/${tripId}/lock-timer/${seatNo}`),
+}
+
 // Admin
 export const adminApi = {
     // Carriers

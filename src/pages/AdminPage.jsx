@@ -98,18 +98,112 @@ function CarriersTab() {
 function VehiclesTab() {
     const [vehicles, setVehicles] = useState([])
     const [carriers, setCarriers] = useState([])
-    const [form, setForm] = useState({ name: '', vehicleNumber: '', transportMode: 'FLIGHT', capacity: 180, carrierId: '' })
+    const [form, setForm] = useState({
+        name: '', vehicleNumber: '', transportMode: 'FLIGHT',
+        capacity: 180, carrierId: '',
+    })
     const [loading, setLoading] = useState(false)
 
+    // FLIGHT: seat categories [ { name, rowStart, rowEnd, price } ]
+    const [flightCategories, setFlightCategories] = useState([
+        { name: 'Business', rowStart: '1', rowEnd: '5', price: '8000' },
+        { name: 'Economy', rowStart: '6', rowEnd: '30', price: '2500' },
+    ])
+    const [flightCols, setFlightCols] = useState('A,B,C,D,E,F')
+
+    // TRAIN: coaches [ { coachNo, seatClass, seats, price } ]
+    const [trainCoaches, setTrainCoaches] = useState([
+        { coachNo: 'A1', seatClass: '1AC', seats: '24', price: '3500' },
+        { coachNo: 'B1', seatClass: '2AC', seats: '48', price: '2000' },
+        { coachNo: 'S1', seatClass: 'Sleeper', seats: '72', price: '600' },
+    ])
+
+    // BUS: simple rows + cols
+    const [busRows, setBusRows] = useState('12')
+    const [busCols, setBusCols] = useState('A,B,C,D')
+    const [busPrice, setBusPrice] = useState('')
+
     const load = () => Promise.all([adminApi.getVehicles(), adminApi.getCarriers()])
-        .then(([v, c]) => { const vArr = Array.isArray(v.data) ? v.data : []; const cArr = Array.isArray(c.data) ? c.data : []; setVehicles(vArr); setCarriers(cArr); if (cArr[0]) setForm(f => ({ ...f, carrierId: cArr[0].id })) })
-        .catch(() => { })
+        .then(([v, c]) => {
+            const vArr = Array.isArray(v.data) ? v.data : []
+            const cArr = Array.isArray(c.data) ? c.data : []
+            setVehicles(vArr); setCarriers(cArr)
+            if (cArr[0]) setForm(f => ({ ...f, carrierId: cArr[0].id }))
+        }).catch(() => { })
     useEffect(() => { load() }, [])
+
+    /* ----- Flight category helpers ----- */
+    const addFlightCat = () => setFlightCategories(fc => [...fc, { name: '', rowStart: '', rowEnd: '', price: '' }])
+    const removeFlightCat = (i) => setFlightCategories(fc => fc.filter((_, idx) => idx !== i))
+    const setFlightCat = (i, key, val) => setFlightCategories(fc => fc.map((c, idx) => idx === i ? { ...c, [key]: val } : c))
+
+    /* ----- Train coach helpers ----- */
+    const addTrainCoach = () => setTrainCoaches(tc => [...tc, { coachNo: '', seatClass: '', seats: '72', price: '' }])
+    const removeTrainCoach = (i) => setTrainCoaches(tc => tc.filter((_, idx) => idx !== i))
+    const setTrainCoach = (i, key, val) => setTrainCoaches(tc => tc.map((c, idx) => idx === i ? { ...c, [key]: val } : c))
+
+    /* ----- Build seatLayout + seatClasses JSON for backend ----- */
+    const buildPayload = () => {
+        const mode = form.transportMode
+        let seatLayout = null, seatClasses = null, totalSeats = null
+
+        if (mode === 'FLIGHT') {
+            const cols = flightCols.split(',').map(s => s.trim()).filter(Boolean)
+            const seat_classes = {}
+            for (const cat of flightCategories) {
+                if (cat.name && cat.rowStart && cat.rowEnd) {
+                    seat_classes[cat.name] = { rows: `${cat.rowStart}-${cat.rowEnd}` }
+                    if (cat.price) seat_classes[cat.name].price = Number(cat.price)
+                }
+            }
+            const lastCat = flightCategories[flightCategories.length - 1]
+            const maxRow = lastCat ? Number(lastCat.rowEnd) || 30 : 30
+            seatLayout = { rows: maxRow, columns: cols, seat_classes }
+            seatClasses = {}
+            for (const cat of flightCategories) {
+                if (cat.name && cat.price) seatClasses[cat.name] = Number(cat.price)
+            }
+            totalSeats = maxRow * cols.length
+        }
+
+        if (mode === 'TRAIN') {
+            const coaches = trainCoaches.map(c => ({
+                coach_no: c.coachNo,
+                class: c.seatClass,
+                seats: Number(c.seats) || 72,
+                price: Number(c.price) || undefined,
+            }))
+            seatLayout = { coaches }
+            seatClasses = {}
+            for (const c of trainCoaches) {
+                if (c.seatClass && c.price) seatClasses[c.seatClass] = Number(c.price)
+            }
+            totalSeats = trainCoaches.reduce((sum, c) => sum + (Number(c.seats) || 0), 0)
+        }
+
+        if (mode === 'BUS') {
+            const cols = busCols.split(',').map(s => s.trim()).filter(Boolean)
+            seatLayout = { rows: Number(busRows) || 12, columns: cols }
+            seatClasses = busPrice ? { 'Standard': Number(busPrice) } : null
+            totalSeats = (Number(busRows) || 12) * cols.length
+        }
+
+        return { seatLayout, seatClasses, totalSeats }
+    }
 
     const submit = async (e) => {
         e.preventDefault(); setLoading(true)
-        try { await adminApi.createVehicle({ ...form, capacity: Number(form.capacity), isActive: true }); toast.success('Vehicle added'); load() }
-        catch (err) { toast.error(err.response?.data?.message || 'Failed') }
+        try {
+            const { seatLayout, seatClasses, totalSeats } = buildPayload()
+            await adminApi.createVehicle({
+                name: form.name, vehicleNumber: form.vehicleNumber,
+                transportMode: form.transportMode, capacity: Number(form.capacity),
+                carrierId: form.carrierId, isActive: true,
+                seatLayout, seatClasses,
+                totalSeats: totalSeats || Number(form.capacity)
+            })
+            toast.success('Vehicle added'); load()
+        } catch (err) { toast.error(err.response?.data?.message || 'Failed') }
         finally { setLoading(false) }
     }
 
@@ -117,8 +211,10 @@ function VehiclesTab() {
 
     return (
         <div className="grid lg:grid-cols-2 gap-6">
-            <form onSubmit={submit} className="glass-card p-5 space-y-4">
+            <form onSubmit={submit} className="glass-card p-5 space-y-5">
                 <h3 className="text-white font-semibold">Add Vehicle</h3>
+
+                {/* Basic Info */}
                 <Field label="Carrier">
                     <select value={form.carrierId} onChange={e => setForm({ ...form, carrierId: e.target.value })} className="input-field">
                         {carriers.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -130,8 +226,86 @@ function VehiclesTab() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                     <Field label="Mode"><Select options={modeOptions} value={form.transportMode} onChange={e => setForm({ ...form, transportMode: e.target.value })} /></Field>
-                    <Field label="Capacity"><Input type="number" min="1" value={form.capacity} onChange={e => setForm({ ...form, capacity: e.target.value })} /></Field>
+                    <Field label="Total Capacity"><Input type="number" min="1" value={form.capacity} onChange={e => setForm({ ...form, capacity: e.target.value })} /></Field>
                 </div>
+
+                {/* ── FLIGHT seat categories ── */}
+                {form.transportMode === 'FLIGHT' && (
+                    <div className="space-y-3">
+                        <Field label="Seat Columns (comma-separated)">
+                            <Input value={flightCols} onChange={e => setFlightCols(e.target.value)} placeholder="A,B,C,D,E,F" />
+                        </Field>
+                        <div className="flex items-center justify-between">
+                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Seat Classes</p>
+                            <button type="button" onClick={addFlightCat} className="text-xs text-primary-400 hover:text-primary-300 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Class</button>
+                        </div>
+                        {flightCategories.map((cat, i) => (
+                            <div key={i} className="grid grid-cols-5 gap-2 items-center bg-white/5 rounded-xl p-3">
+                                <div className="col-span-2">
+                                    <input className="input-field text-xs" value={cat.name} onChange={e => setFlightCat(i, 'name', e.target.value)} placeholder="Class name (e.g. Business)" />
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <input className="input-field text-xs w-full" type="number" value={cat.rowStart} onChange={e => setFlightCat(i, 'rowStart', e.target.value)} placeholder="Row from" />
+                                    <span className="text-gray-600 text-xs">–</span>
+                                    <input className="input-field text-xs w-full" type="number" value={cat.rowEnd} onChange={e => setFlightCat(i, 'rowEnd', e.target.value)} placeholder="Row to" />
+                                </div>
+                                <div>
+                                    <input className="input-field text-xs" type="number" value={cat.price} onChange={e => setFlightCat(i, 'price', e.target.value)} placeholder="₹ Price" />
+                                </div>
+                                <div className="flex justify-end">
+                                    <button type="button" onClick={() => removeFlightCat(i)} className="text-red-400/60 hover:text-red-400 p-1"><Trash2 className="w-3.5 h-3.5" /></button>
+                                </div>
+                            </div>
+                        ))}
+                        <div className="text-xs text-gray-600 bg-white/3 rounded-lg p-2.5 space-y-0.5">
+                            <p className="text-gray-400 font-semibold mb-1">Preview JSON</p>
+                            <code className="text-primary-400 text-[10px] break-all">
+                                {JSON.stringify({ rows: Number(flightCategories[flightCategories.length - 1]?.rowEnd || 30), columns: flightCols.split(',').map(s => s.trim()) }, null, 0)}
+                            </code>
+                        </div>
+                    </div>
+                )}
+
+                {/* ── TRAIN coaches ── */}
+                {form.transportMode === 'TRAIN' && (
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                            <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Coaches & Classes</p>
+                            <button type="button" onClick={addTrainCoach} className="text-xs text-primary-400 hover:text-primary-300 flex items-center gap-1"><Plus className="w-3 h-3" /> Add Coach</button>
+                        </div>
+                        <div className="grid grid-cols-4 gap-1 px-1">
+                            {['Coach No.', 'Class', 'Seats', '₹ Price'].map(h => (
+                                <p key={h} className="text-[10px] text-gray-600 font-semibold uppercase tracking-wider">{h}</p>
+                            ))}
+                        </div>
+                        {trainCoaches.map((coach, i) => (
+                            <div key={i} className="grid grid-cols-4 gap-2 items-center bg-white/5 rounded-xl p-2.5">
+                                <input className="input-field text-xs" value={coach.coachNo} onChange={e => setTrainCoach(i, 'coachNo', e.target.value)} placeholder="B1" />
+                                <input className="input-field text-xs" value={coach.seatClass} onChange={e => setTrainCoach(i, 'seatClass', e.target.value)} placeholder="3AC / Sleeper" />
+                                <input className="input-field text-xs" type="number" value={coach.seats} onChange={e => setTrainCoach(i, 'seats', e.target.value)} placeholder="72" />
+                                <div className="flex gap-1 items-center">
+                                    <input className="input-field text-xs flex-1" type="number" value={coach.price} onChange={e => setTrainCoach(i, 'price', e.target.value)} placeholder="600" />
+                                    <button type="button" onClick={() => removeTrainCoach(i)} className="text-red-400/60 hover:text-red-400 p-1"><Trash2 className="w-3.5 h-3.5" /></button>
+                                </div>
+                            </div>
+                        ))}
+                        <p className="text-xs text-gray-600">Total: {trainCoaches.reduce((s, c) => s + Number(c.seats || 0), 0)} seats across {trainCoaches.length} coach(es)</p>
+                    </div>
+                )}
+
+                {/* ── BUS layout ── */}
+                {form.transportMode === 'BUS' && (
+                    <div className="space-y-3">
+                        <p className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Bus Layout</p>
+                        <div className="grid grid-cols-3 gap-3">
+                            <Field label="Rows"><Input type="number" value={busRows} onChange={e => setBusRows(e.target.value)} placeholder="12" /></Field>
+                            <Field label="Columns (e.g. A,B,C,D)"><Input value={busCols} onChange={e => setBusCols(e.target.value)} placeholder="A,B,C,D" /></Field>
+                            <Field label="Seat Price (₹)"><Input type="number" value={busPrice} onChange={e => setBusPrice(e.target.value)} placeholder="500" /></Field>
+                        </div>
+                        <p className="text-xs text-gray-600">{(Number(busRows) || 0) * busCols.split(',').filter(Boolean).length} total seats</p>
+                    </div>
+                )}
+
                 <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
                     {loading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Plus className="w-4 h-4" />}
                     Add Vehicle
@@ -139,14 +313,32 @@ function VehiclesTab() {
             </form>
             <div className="space-y-3">
                 <h3 className="text-white font-semibold">Existing Vehicles ({vehicles.length})</h3>
-                {vehicles.map(v => (
-                    <ListItem key={v.id} title={v.name} subtitle={`${v.transportMode} • ${v.carrier?.name} • ${v.capacity} seats`} />
-                ))}
+                {vehicles.map(v => {
+                    const classes = v.seatClasses ? Object.keys(v.seatClasses) : []
+                    return (
+                        <div key={v.id} className="flex items-start justify-between p-3 bg-dark-700 rounded-xl">
+                            <div>
+                                <p className="text-white text-sm font-medium">{v.name}</p>
+                                <p className="text-gray-500 text-xs mt-0.5">{v.transportMode} • {v.carrier?.name} • {v.capacity} seats</p>
+                                {classes.length > 0 && (
+                                    <div className="flex gap-1 mt-1.5 flex-wrap">
+                                        {classes.map(cls => (
+                                            <span key={cls} className="text-[10px] px-1.5 py-0.5 bg-primary-500/15 text-primary-400 rounded border border-primary-500/25 font-semibold">
+                                                {cls} — ₹{Number(v.seatClasses[cls]).toLocaleString('en-IN')}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )
+                })}
                 {vehicles.length === 0 && <p className="text-gray-600 text-sm">No vehicles yet.</p>}
             </div>
         </div>
     )
 }
+
 
 function StationsTab() {
     const [stations, setStations] = useState([])
@@ -202,7 +394,12 @@ function TripsTab() {
     const [vehicles, setVehicles] = useState([])
     const [stations, setStations] = useState([])
     const [selectedMode, setSelectedMode] = useState('FLIGHT')
-    const [form, setForm] = useState({ vehicleId: '', originStationId: '', destinationStationId: '', departureTime: '', arrivalTime: '', price: '', distance: '', availableSeats: '' })
+    const [form, setForm] = useState({
+        vehicleId: '', originStationId: '', destinationStationId: '',
+        departureTime: '', arrivalTime: '', distance: '',
+        // price and availableSeats will be auto-derived from vehicle
+        price: '', availableSeats: ''
+    })
     const [loading, setLoading] = useState(false)
     const [tripFilter, setTripFilter] = useState('ALL')
 
@@ -222,15 +419,34 @@ function TripsTab() {
     const filteredVehicles = vehicles.filter(v => v.transportMode === selectedMode)
     const filteredStations = stations.filter(s => s.type === MODE_CONFIG[selectedMode].stationType)
 
+    // Get the currently selected vehicle object
+    const selectedVehicle = vehicles.find(v => String(v.id) === String(form.vehicleId))
+    const vehicleHasClasses = selectedVehicle?.seatClasses && Object.keys(selectedVehicle.seatClasses).length > 0
+
+    // Auto-derive: lowest class price as base trip price, totalSeats from vehicle
+    const autoDeriveFromVehicle = (vehicleId) => {
+        const v = vehicles.find(v => String(v.id) === String(vehicleId))
+        if (!v) return {}
+        let autoPrice = ''
+        if (v.seatClasses && Object.keys(v.seatClasses).length > 0) {
+            const prices = Object.values(v.seatClasses).map(Number).filter(p => p > 0)
+            if (prices.length > 0) autoPrice = Math.min(...prices)
+        }
+        const autoSeats = v.totalSeats || v.capacity || ''
+        return { price: String(autoPrice), availableSeats: String(autoSeats) }
+    }
+
     // Auto-select first vehicle/station when mode changes
     useEffect(() => {
         const firstVehicle = filteredVehicles[0]
         const firstStation = filteredStations[0]
+        const derived = firstVehicle ? autoDeriveFromVehicle(firstVehicle.id) : {}
         setForm(f => ({
             ...f,
             vehicleId: firstVehicle ? String(firstVehicle.id) : '',
             originStationId: firstStation ? String(firstStation.id) : '',
             destinationStationId: firstStation ? String(firstStation.id) : '',
+            ...derived,
         }))
     }, [selectedMode, vehicles, stations])
 
@@ -239,7 +455,7 @@ function TripsTab() {
         try {
             await adminApi.createTrip({ ...form, price: Number(form.price), distance: Number(form.distance), availableSeats: Number(form.availableSeats), isActive: true })
             toast.success('Trip added!'); load()
-            setForm(f => ({ ...f, departureTime: '', arrivalTime: '', price: '', distance: '', availableSeats: '' }))
+            setForm(f => ({ ...f, departureTime: '', arrivalTime: '', distance: '' }))
         } catch (err) { toast.error(err.response?.data?.message || 'Failed') }
         finally { setLoading(false) }
     }
@@ -284,11 +500,32 @@ function TripsTab() {
                     <div className="space-y-3">
                         <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold border-b border-white/5 pb-2">Vehicle</p>
                         <Field label={`${currentCfg.label} Vehicle`}>
-                            <select value={form.vehicleId} onChange={e => setForm({ ...form, vehicleId: e.target.value })} className="input-field" required>
+                            <select value={form.vehicleId} onChange={e => {
+                                const derived = autoDeriveFromVehicle(e.target.value)
+                                setForm({ ...form, vehicleId: e.target.value, ...derived })
+                            }} className="input-field" required>
                                 {filteredVehicles.length === 0 && <option value="">— No {currentCfg.label.toLowerCase()} vehicles —</option>}
                                 {filteredVehicles.map(v => <option key={v.id} value={v.id}>{v.name} • {v.carrier?.name || 'Unknown Carrier'} • {v.capacity} seats</option>)}
                             </select>
                         </Field>
+
+                        {/* Show class badges when vehicle has seat classes */}
+                        {vehicleHasClasses && selectedVehicle && (
+                            <div className="rounded-xl bg-white/5 border border-white/8 p-3 space-y-2">
+                                <p className="text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Class-Based Pricing (from vehicle config)</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {Object.entries(selectedVehicle.seatClasses).map(([cls, price]) => (
+                                        <div key={cls} className="flex flex-col items-center px-3 py-1.5 rounded-lg bg-primary-500/10 border border-primary-500/25 text-center">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{cls}</span>
+                                            <span className="text-sm font-bold text-primary-400">₹{Number(price).toLocaleString('en-IN')}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                <p className="text-[10px] text-amber-400/70 flex items-center gap-1">
+                                    <span>⚡</span> Seat-wise prices are set. Trip base price auto-set to lowest class price.
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Section: Route */}
@@ -319,14 +556,41 @@ function TripsTab() {
                         </div>
                     </div>
 
-                    {/* Section: Pricing & Capacity */}
+                    {/* Section: Distance + optional price override */}
                     <div className="space-y-3">
-                        <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold border-b border-white/5 pb-2">Pricing & Capacity</p>
-                        <div className="grid grid-cols-3 gap-3">
-                            <Field label="Price (₹)"><Input type="number" min="0" required value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="1200" /></Field>
-                            <Field label="Distance (km)"><Input type="number" min="0" required value={form.distance} onChange={e => setForm({ ...form, distance: e.target.value })} placeholder="540" /></Field>
-                            <Field label="Seats"><Input type="number" min="1" required value={form.availableSeats} onChange={e => setForm({ ...form, availableSeats: e.target.value })} placeholder="180" /></Field>
+                        <p className="text-xs text-gray-400 uppercase tracking-wider font-semibold border-b border-white/5 pb-2">
+                            {vehicleHasClasses ? 'Distance' : 'Pricing & Capacity'}
+                        </p>
+                        <div className={`grid gap-3 ${vehicleHasClasses ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                            {!vehicleHasClasses && (
+                                <Field label="Base Price (₹)">
+                                    <Input type="number" min="0" required value={form.price}
+                                        onChange={e => setForm({ ...form, price: e.target.value })} placeholder="1200" />
+                                </Field>
+                            )}
+                            <Field label="Distance (km)">
+                                <Input type="number" min="0" required value={form.distance}
+                                    onChange={e => setForm({ ...form, distance: e.target.value })} placeholder="540" />
+                            </Field>
+                            {vehicleHasClasses ? (
+                                <Field label={`Seats (from vehicle: ${selectedVehicle?.totalSeats || selectedVehicle?.capacity || '–'})`}>
+                                    <Input type="number" min="1" value={form.availableSeats}
+                                        onChange={e => setForm({ ...form, availableSeats: e.target.value })}
+                                        placeholder={String(selectedVehicle?.totalSeats || selectedVehicle?.capacity || '')} />
+                                </Field>
+                            ) : (
+                                <Field label="Available Seats">
+                                    <Input type="number" min="1" required value={form.availableSeats}
+                                        onChange={e => setForm({ ...form, availableSeats: e.target.value })} placeholder="180" />
+                                </Field>
+                            )}
                         </div>
+                        {/* Hidden base price input when vehicle has classes (auto-set) */}
+                        {vehicleHasClasses && (
+                            <p className="text-[10px] text-gray-600">
+                                Base trip price auto-set to ₹{Number(form.price).toLocaleString('en-IN')} (lowest class price). Actual seat prices are per-class.
+                            </p>
+                        )}
                     </div>
 
                     <button type="submit" disabled={loading || filteredVehicles.length === 0 || filteredStations.length === 0}
@@ -341,6 +605,7 @@ function TripsTab() {
                         </p>
                     )}
                 </form>
+
 
                 {/* ── Existing Trips List ── */}
                 <div className="space-y-4">
