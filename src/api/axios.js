@@ -35,6 +35,8 @@ export const authApi = {
     updateProfile: (data) => api.put('/auth/profile', data),
 }
 
+
+
 // Station / Search
 export const stationApi = {
     search: (q) => api.get(`/stations/search?q=${encodeURIComponent(q)}`),
