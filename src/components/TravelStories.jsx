@@ -32,21 +32,21 @@ const STORIES = [
 
 export default function TravelStories() {
     return (
-        <section className="py-16 px-4 bg-dark-800/30">
+        <section className="py-4 px-4">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-10">
-                    <span className="inline-block text-xs font-bold tracking-widest text-primary-400 uppercase mb-3 bg-primary-500/10 border border-primary-500/20 px-4 py-1.5 rounded-full">
+                    <span className="inline-block text-xs font-bold tracking-widest text-primary-400 uppercase mb-3 bg-primary-500/10 border border-primary-500/20 px-4 py-1.5 rounded-full shadow-sm">
                         Travel Stories
                     </span>
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">News & Travel Inspiration</h2>
-                    <p className="text-gray-500 text-sm mt-1">Guides, tips, and stories from fellow travellers</p>
+                    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">News & Travel Inspiration</h2>
+                    <p className="text-gray-500 text-sm">Guides, tips, and stories from fellow travellers</p>
                 </div>
 
                 <div className="grid sm:grid-cols-3 gap-5">
                     {STORIES.map((s, i) => (
                         <article
                             key={i}
-                            className={`rounded-2xl bg-gradient-to-b ${s.gradient} border border-white/5 overflow-hidden group hover:border-white/10 hover:-translate-y-1 hover:shadow-2xl transition-all duration-200 cursor-pointer`}
+                            className={`rounded-2xl bg-gradient-to-b ${s.gradient} border border-white/5 overflow-hidden group hover:border-white/20 hover:-translate-y-1.5 shadow-lg hover:shadow-2xl hover:shadow-${s.gradient.split('-')[2]}-900/40 transition-all duration-300 cursor-pointer`}
                         >
                             <div className="h-36 flex items-center justify-center text-6xl border-b border-white/5 bg-black/20 group-hover:scale-105 transition-transform duration-300 overflow-hidden">
                                 {s.emoji}

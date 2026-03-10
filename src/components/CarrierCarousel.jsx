@@ -27,7 +27,7 @@ export default function CarrierCarousel() {
     }
 
     return (
-        <section className="py-16 px-4">
+        <section className="py-4 px-4">
             <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-6">
                     <div>
@@ -48,7 +48,7 @@ export default function CarrierCarousel() {
                     {CARRIERS.map((carrier, i) => (
                         <div
                             key={i}
-                            className="flex-shrink-0 w-44 glass p-4 hover:border-white/10 hover:-translate-y-1 hover:shadow-xl transition-all duration-200 group cursor-pointer"
+                            className="flex-shrink-0 w-48 glass-card bg-white/60 dark:bg-dark-800/60 p-5 hover:border-primary-500/30 dark:hover:border-primary-500/30 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary-500/10 transition-all duration-300 group cursor-pointer"
                         >
                             {/* Logo circle */}
                             <div

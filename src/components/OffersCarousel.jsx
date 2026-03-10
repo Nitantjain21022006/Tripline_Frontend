@@ -62,7 +62,7 @@ export default function OffersCarousel() {
     }
 
     return (
-        <section className="py-16 px-4">
+        <section className="py-4 px-4 relative z-10">
             <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-6">
                     <div>
@@ -88,7 +88,7 @@ export default function OffersCarousel() {
                         return (
                             <div
                                 key={offer.id}
-                                className={`flex-shrink-0 w-72 sm:w-80 snap-start rounded-2xl bg-gradient-to-br ${offer.gradient} p-5 relative overflow-hidden group cursor-pointer hover:scale-[1.02] transition-transform duration-200`}
+                                className={`flex-shrink-0 w-72 sm:w-80 snap-start rounded-2xl bg-gradient-to-br ${offer.gradient} p-5 sm:p-6 relative overflow-hidden group cursor-pointer hover:scale-[1.03] hover:-translate-y-1 shadow-lg hover:shadow-2xl hover:shadow-${offer.gradient.split('-')[2]}-500/30 transition-all duration-300`}
                             >
                                 {/* Background accent */}
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
@@ -109,8 +109,8 @@ export default function OffersCarousel() {
 
                                     <div className="flex items-center justify-between">
                                         <button
-                                            onClick={() => copyCode(offer.code)}
-                                            className="flex items-center gap-2 bg-white/15 hover:bg-white/25 border border-white/20 text-white font-mono text-sm font-bold px-3 py-1.5 rounded-lg transition-all"
+                                            onClick={(e) => { e.stopPropagation(); copyCode(offer.code); }}
+                                            className="flex items-center gap-2 bg-white/15 hover:bg-white/25 border border-white/20 text-white font-mono text-sm font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95"
                                         >
                                             {copied === offer.code ? '✓ Copied!' : offer.code}
                                         </button>

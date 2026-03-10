@@ -53,7 +53,7 @@ const FEATURES = [
 
 export default function WhyTripline() {
     return (
-        <section className="py-20 px-4 bg-dark-800/30">
+        <section className="py-4 px-4">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-12">
                     <span className="inline-block text-xs font-bold tracking-widest text-primary-400 uppercase mb-3 bg-primary-500/10 border border-primary-500/20 px-4 py-1.5 rounded-full">
@@ -71,10 +71,10 @@ export default function WhyTripline() {
                         return (
                             <div
                                 key={i}
-                                className="glass p-5 group hover:border-white/10 hover:-translate-y-1 transition-all duration-200 hover:shadow-xl hover:shadow-black/30"
+                                className="glass-card bg-white/60 dark:bg-dark-800/60 p-6 sm:p-7 group hover:border-primary-500/30 dark:hover:border-primary-500/30 hover:-translate-y-1.5 transition-all duration-300 hover:shadow-xl hover:shadow-primary-500/10"
                             >
-                                <div className={`w-11 h-11 rounded-xl border ${f.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-200`}>
-                                    <Icon className={`w-5 h-5 ${f.color.split(' ')[0]}`} />
+                                <div className={`w-12 h-12 rounded-xl border ${f.color} flex items-center justify-center mb-5 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm`}>
+                                    <Icon className={`w-6 h-6 ${f.color.split(' ')[0]}`} />
                                 </div>
                                 <h3 className="text-gray-900 dark:text-white font-semibold text-sm mb-2">{f.title}</h3>
                                 <p className="text-gray-500 text-xs leading-relaxed">{f.desc}</p>

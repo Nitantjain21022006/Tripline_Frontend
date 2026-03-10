@@ -265,7 +265,7 @@ export default function HeroSearchCard() {
             </div>
 
             {/* ── SEARCH CARD ── */}
-            <form onSubmit={handleSearch} className="glass-card p-5 sm:p-6 space-y-4">
+            <form onSubmit={handleSearch} className="bg-white/90 dark:bg-dark-800/80 backdrop-blur-xl border border-gray-200 dark:border-white/10 rounded-2xl shadow-xl dark:shadow-2xl p-6 sm:p-8 space-y-5">
 
                 {/* From / To with city dropdown */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative">
@@ -287,8 +287,8 @@ export default function HeroSearchCard() {
                             absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20
                             hidden sm:flex w-8 h-8 rounded-full items-center justify-center
                             bg-white dark:bg-dark-600 border-2 border-gray-200 dark:border-white/10
-                            hover:bg-primary-600 hover:border-primary-500 hover:text-white
-                            transition-all duration-200 hover:scale-110 active:scale-95 text-gray-500 dark:text-gray-300
+                            hover:bg-primary-600 hover:border-primary-500 hover:text-white hover:shadow-lg hover:shadow-primary-500/20
+                            transition-all duration-300 hover:scale-110 active:scale-95 text-gray-500 dark:text-gray-300
                             ${swapAnim ? 'rotate-180' : ''}
                         `}
                     >
@@ -369,7 +369,7 @@ export default function HeroSearchCard() {
                 {/* ── SEARCH BUTTON ── */}
                 <button
                     type="submit"
-                    className="btn-primary w-full flex items-center justify-center gap-2 text-base py-3.5 rounded-xl group"
+                    className="btn-primary w-full flex items-center justify-center gap-2 text-lg font-bold py-4 rounded-xl group hover:-translate-y-0.5 shadow-xl shadow-primary-500/25 mt-2"
                 >
                     <Search className="w-5 h-5 group-hover:rotate-12 transition-transform duration-200" />
                     {mode === 'COMBINED' ? 'Search All Routes' : `Search ${MODES.find(m => m.id === mode)?.label}`}

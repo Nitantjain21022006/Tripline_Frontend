@@ -61,29 +61,32 @@ export default function LandingPage() {
                     </p>
 
                     {/* Trust badges row */}
-                    <div className="flex flex-wrap items-center justify-center gap-3 mb-8">
+                    <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
                         {TRUST_BADGES.map((t, i) => (
-                            <div key={i} className="flex items-center gap-1.5 bg-white/80 dark:bg-dark-700/60 border border-gray-200 dark:border-white/5 px-3 py-1.5 rounded-full text-xs shadow-sm">
-                                <Star className="w-3 h-3 text-yellow-500 dark:text-yellow-400 fill-yellow-500 dark:fill-yellow-400" />
-                                <span className="text-gray-800 dark:text-white font-semibold">{t.label}</span>
-                                <span className="text-gray-400 md:text-gray-500">·</span>
-                                <span className="text-gray-500 dark:text-gray-400">{t.sub}</span>
+                            <div key={i} className="flex items-center gap-1.5 bg-white/80 dark:bg-dark-700/80 border border-gray-200 dark:border-white/10 px-4 py-2 rounded-full text-xs shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+                                <Star className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 fill-amber-500 dark:fill-amber-400" />
+                                <span className="text-gray-900 dark:text-white font-bold tracking-tight">{t.label}</span>
+                                <span className="text-gray-300 dark:text-gray-600">|</span>
+                                <span className="text-gray-500 dark:text-gray-400 font-medium">{t.sub}</span>
                             </div>
                         ))}
                     </div>
 
                     {/* ── MAIN SEARCH CARD ── */}
-                    <div className="text-left">
-                        <HeroSearchCard />
+                    <div className="text-left relative z-20 hover:shadow-2xl hover:shadow-primary-500/10 transition-shadow duration-500 rounded-3xl group">
+                        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-purple-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="relative">
+                            <HeroSearchCard />
+                        </div>
                     </div>
 
                     {/* Stats row */}
                     <div className="grid grid-cols-4 gap-4 mt-10 max-w-lg mx-auto">
                         {STATS.map(s => (
-                            <div key={s.label} className="text-center">
-                                <div className="text-lg mb-0.5">{s.emoji}</div>
-                                <div className="text-xl font-black text-gray-900 dark:text-white">{s.value}</div>
-                                <div className="text-[11px] text-gray-600 dark:text-gray-500 mt-0.5">{s.label}</div>
+                            <div key={s.label} className="text-center group p-4 rounded-2xl hover:bg-white/50 dark:hover:bg-dark-800/40 transition-colors">
+                                <div className="text-2xl mb-1.5 group-hover:-translate-y-1 transition-transform">{s.emoji}</div>
+                                <div className="text-2xl font-black text-gray-900 dark:text-white">{s.value}</div>
+                                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wider">{s.label}</div>
                             </div>
                         ))}
                     </div>
@@ -99,47 +102,58 @@ export default function LandingPage() {
             {/* ═══════════════════════════════════════ */}
             {/*  OFFERS CAROUSEL                        */}
             {/* ═══════════════════════════════════════ */}
-            <OffersCarousel />
+            <div className="py-20 md:py-28 relative">
+                <OffersCarousel />
+            </div>
 
             {/* ═══════════════════════════════════════ */}
             {/*  WHY TRIPLINE                           */}
             {/* ═══════════════════════════════════════ */}
-            <WhyTripline />
+            <div className="py-16 bg-white/40 dark:bg-dark-900/40 border-y border-gray-200/50 dark:border-white/5">
+                <WhyTripline />
+            </div>
 
             {/* ═══════════════════════════════════════ */}
             {/*  POPULAR ROUTES                         */}
             {/* ═══════════════════════════════════════ */}
-            <PopularRoutes />
+            <div className="py-20 md:py-28">
+                <PopularRoutes />
+            </div>
 
             {/* ═══════════════════════════════════════ */}
             {/*  CARRIERS                               */}
             {/* ═══════════════════════════════════════ */}
-            <CarrierCarousel />
+            <div className="pt-10 pb-20 md:pb-28">
+                <CarrierCarousel />
+            </div>
 
             {/* ═══════════════════════════════════════ */}
             {/*  TRAVEL STORIES                         */}
             {/* ═══════════════════════════════════════ */}
-            <TravelStories />
+            <div className="py-20 md:py-28 bg-white/40 dark:bg-dark-900/40 border-y border-gray-200/50 dark:border-white/5">
+                <TravelStories />
+            </div>
 
             {/* ═══════════════════════════════════════ */}
             {/*  CTA BANNER                             */}
             {/* ═══════════════════════════════════════ */}
-            <section className="py-16 px-4">
-                <div className="max-w-3xl mx-auto">
-                    <div className="glass-card p-10 text-center relative overflow-hidden">
+            <section className="py-24 px-4 relative">
+                <div className="max-w-4xl mx-auto">
+                    <div className="glass-card p-12 md:p-16 text-center relative overflow-hidden shadow-2xl hover:shadow-primary-500/10 transition-shadow duration-500 group">
                         {/* Gradient accent */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 to-purple-600/10 pointer-events-none" />
-                        <div className="relative z-10">
-                            <h2 className="text-3xl font-black text-gray-900 dark:text-white mb-3">Ready to travel smarter?</h2>
-                            <p className="text-gray-600 dark:text-gray-400 mb-7 max-w-lg mx-auto text-sm leading-relaxed">
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary-600/10 via-transparent to-purple-600/10 pointer-events-none group-hover:opacity-100 opacity-60 transition-opacity duration-700" />
+
+                        <div className="relative z-10 animate-slide-up">
+                            <h2 className="text-4xl md:text-5xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">Ready to travel <span className="text-primary-500">smarter?</span></h2>
+                            <p className="text-gray-600 dark:text-gray-400 mb-10 max-w-xl mx-auto text-base leading-relaxed">
                                 Join thousands of travellers who plan multi-modal journeys with Tripline. Sign up free and get ₹500 off your first booking.
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                                <button onClick={() => navigate('/register')} className="btn-primary text-base px-8 py-3.5 flex items-center justify-center gap-2 group">
+                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                                <button onClick={() => navigate('/register')} className="btn-primary text-base px-8 py-4 flex items-center justify-center gap-2 group/btn hover:-translate-y-0.5 shadow-xl shadow-primary-500/20">
                                     Get Started Free
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                                 </button>
-                                <button onClick={() => navigate('/search')} className="btn-outline flex items-center justify-center gap-2">
+                                <button onClick={() => navigate('/search')} className="btn-outline flex items-center justify-center gap-2 hover:-translate-y-0.5 bg-white/50 dark:bg-dark-800/50 backdrop-blur-sm">
                                     Explore Routes
                                 </button>
                             </div>

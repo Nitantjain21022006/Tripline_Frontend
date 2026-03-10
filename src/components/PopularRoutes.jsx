@@ -44,7 +44,7 @@ export default function PopularRoutes() {
     }
 
     return (
-        <section className="py-16 px-4">
+        <section className="py-4 px-4">
             <div className="max-w-7xl mx-auto">
                 <div className="flex items-center justify-between mb-8">
                     <div>
@@ -61,11 +61,11 @@ export default function PopularRoutes() {
                         <button
                             key={i}
                             onClick={() => handleClick(r)}
-                            className="glass p-4 text-left hover:border-primary-500/30 hover:bg-dark-700/80 transition-all duration-200 group hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary-600/10"
+                            className="glass-card bg-white/60 dark:bg-dark-800/60 p-5 text-left hover:border-primary-500/30 dark:hover:border-primary-500/30 hover:bg-white/80 dark:hover:bg-dark-700/80 transition-all duration-300 group hover:-translate-y-1.5 hover:shadow-xl hover:shadow-primary-600/10"
                         >
                             {/* Route rank */}
                             <div className="flex items-center justify-between mb-3">
-                                <span className="text-[10px] font-black text-gray-600 bg-dark-600 px-2 py-0.5 rounded-full">
+                                <span className="text-[10px] font-black text-gray-700 dark:text-gray-300 bg-gray-200/50 dark:bg-dark-600 px-2.5 py-1 rounded-full border border-gray-300/50 dark:border-white/5">
                                     #{i + 1} Popular
                                 </span>
                                 <ChevronRight className="w-4 h-4 text-gray-600 group-hover:text-primary-400 group-hover:translate-x-0.5 transition-all" />
