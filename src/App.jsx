@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './context/AuthContext'
 import Navbar from './components/Navbar'
@@ -12,6 +13,8 @@ import AdminPage from './pages/AdminPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import VerifyEmailPage from './pages/VerifyEmailPage'
+import DocPage from './pages/DocPage'
+import StartupLoader from './components/StartupLoader'
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated, loading } = useAuth()
@@ -39,9 +42,14 @@ function LoadingScreen() {
 }
 
 export default function App() {
+  const [isAppReady, setIsAppReady] = useState(false)
+
   return (
-    <div className="min-h-screen">
-      <Navbar />
+    <div className="min-h-screen relative">
+      {!isAppReady && <StartupLoader onComplete={() => setIsAppReady(true)} />}
+      
+      <div className={`transition-opacity duration-1000 ${isAppReady ? 'opacity-100' : 'opacity-0'}`}>
+        <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/search" element={<SearchResultsPage />} />
@@ -62,8 +70,27 @@ export default function App() {
         <Route path="/admin" element={
           <AdminRoute><AdminPage /></AdminRoute>
         } />
+        
+        {/* Documentation Pages from Footer */}
+        <Route path="/about" element={<DocPage />} />
+        <Route path="/team" element={<DocPage />} />
+        <Route path="/careers" element={<DocPage />} />
+        <Route path="/blog" element={<DocPage />} />
+        <Route path="/press" element={<DocPage />} />
+        <Route path="/help" element={<DocPage />} />
+        <Route path="/cancellation" element={<DocPage />} />
+        <Route path="/refund" element={<DocPage />} />
+        <Route path="/contact" element={<DocPage />} />
+        <Route path="/chat" element={<DocPage />} />
+        <Route path="/terms" element={<DocPage />} />
+        <Route path="/privacy" element={<DocPage />} />
+        <Route path="/cookies" element={<DocPage />} />
+        <Route path="/disclaimer" element={<DocPage />} />
+        <Route path="/accessibility" element={<DocPage />} />
+
         <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+        </Routes>
+      </div>
     </div>
   )
 }

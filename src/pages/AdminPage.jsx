@@ -39,9 +39,9 @@ function Select({ options, ...props }) {
 
 function ListItem({ title, subtitle, onDelete }) {
     return (
-        <div className="flex items-center justify-between p-3 bg-dark-700 rounded-xl">
+        <div className="flex items-center justify-between p-3 bg-white dark:bg-dark-700 border border-gray-100 dark:border-white/5 rounded-xl">
             <div>
-                <p className="text-white text-sm font-medium">{title}</p>
+                <p className="text-gray-900 dark:text-white text-sm font-medium">{title}</p>
                 {subtitle && <p className="text-gray-500 text-xs mt-0.5">{subtitle}</p>}
             </div>
             {onDelete && (
@@ -73,7 +73,7 @@ function CarriersTab() {
     return (
         <div className="grid lg:grid-cols-2 gap-6">
             <form onSubmit={submit} className="glass-card p-5 space-y-4">
-                <h3 className="text-white font-semibold">Add Carrier</h3>
+                <h3 className="text-gray-900 dark:text-white font-semibold">Add Carrier</h3>
                 <Field label="Name"><Input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="IndiGo" /></Field>
                 <Field label="Email"><Input type="email" value={form.contactEmail} onChange={e => setForm({ ...form, contactEmail: e.target.value })} placeholder="support@carrier.com" /></Field>
                 <Field label="Phone"><Input value={form.contactPhone} onChange={e => setForm({ ...form, contactPhone: e.target.value })} placeholder="+91 99999 99999" /></Field>
@@ -84,7 +84,7 @@ function CarriersTab() {
                 </button>
             </form>
             <div className="space-y-3">
-                <h3 className="text-white font-semibold">Existing Carriers ({carriers.length})</h3>
+                <h3 className="text-gray-900 dark:text-white font-semibold">Existing Carriers ({carriers.length})</h3>
                 {carriers.map(c => (
                     <ListItem key={c.id} title={c.name} subtitle={c.contactEmail}
                         onDelete={() => adminApi.deleteCarrier(c.id).then(load).catch(() => toast.error('Failed to delete'))} />
@@ -212,7 +212,7 @@ function VehiclesTab() {
     return (
         <div className="grid lg:grid-cols-2 gap-6">
             <form onSubmit={submit} className="glass-card p-5 space-y-5">
-                <h3 className="text-white font-semibold">Add Vehicle</h3>
+                <h3 className="text-gray-900 dark:text-white font-semibold">Add Vehicle</h3>
 
                 {/* Basic Info */}
                 <Field label="Carrier">
@@ -312,13 +312,13 @@ function VehiclesTab() {
                 </button>
             </form>
             <div className="space-y-3">
-                <h3 className="text-white font-semibold">Existing Vehicles ({vehicles.length})</h3>
+                <h3 className="text-gray-900 dark:text-white font-semibold">Existing Vehicles ({vehicles.length})</h3>
                 {vehicles.map(v => {
                     const classes = v.seatClasses ? Object.keys(v.seatClasses) : []
                     return (
-                        <div key={v.id} className="flex items-start justify-between p-3 bg-dark-700 rounded-xl">
+                        <div key={v.id} className="flex items-start justify-between p-3 bg-white dark:bg-dark-700 border border-gray-100 dark:border-white/5 rounded-xl text-left">
                             <div>
-                                <p className="text-white text-sm font-medium">{v.name}</p>
+                                <p className="text-gray-900 dark:text-white text-sm font-medium">{v.name}</p>
                                 <p className="text-gray-500 text-xs mt-0.5">{v.transportMode} • {v.carrier?.name} • {v.capacity} seats</p>
                                 {classes.length > 0 && (
                                     <div className="flex gap-1 mt-1.5 flex-wrap">
@@ -362,7 +362,7 @@ function StationsTab() {
     return (
         <div className="grid lg:grid-cols-2 gap-6">
             <form onSubmit={submit} className="glass-card p-5 space-y-4">
-                <h3 className="text-white font-semibold">Add Station</h3>
+                <h3 className="text-gray-900 dark:text-white font-semibold">Add Station</h3>
                 <Field label="Name"><Input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="SVPI Airport" /></Field>
                 <div className="grid grid-cols-2 gap-3">
                     <Field label="City"><Input required value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} placeholder="Ahmedabad" /></Field>
@@ -379,7 +379,7 @@ function StationsTab() {
                 </button>
             </form>
             <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
-                <h3 className="text-white font-semibold">Stations ({stations.length})</h3>
+                <h3 className="text-gray-900 dark:text-white font-semibold">Stations ({stations.length})</h3>
                 {stations.map(s => (
                     <ListItem key={s.id} title={s.name} subtitle={`${s.city}, ${s.state} • ${s.type}`} />
                 ))}
@@ -479,7 +479,7 @@ function TripsTab() {
                             <button key={mode} type="button" onClick={() => setSelectedMode(mode)}
                                 className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border text-sm font-semibold transition-all duration-200 ${isActive
                                     ? `${colorMap[cfg.color]} shadow-lg`
-                                    : 'bg-dark-700/50 border-white/5 text-gray-500 hover:text-gray-300 hover:border-white/10'}`}>
+                                    : 'bg-gray-50 dark:bg-dark-700/50 border-gray-200 dark:border-white/5 text-gray-500 hover:text-gray-900 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-white/10'}`}>
                                 {cfg.icon}
                                 {cfg.label}
                             </button>
@@ -493,7 +493,7 @@ function TripsTab() {
                 <form onSubmit={submit} className="glass-card p-6 space-y-5">
                     <div className="flex items-center gap-2">
                         <span className={`mode-icon-${currentCfg.color === 'sky' ? 'flight' : selectedMode.toLowerCase()}`}>{currentCfg.icon}</span>
-                        <h3 className="text-white font-semibold text-lg">Add {currentCfg.label} Trip</h3>
+                        <h3 className="text-gray-900 dark:text-white font-semibold text-lg">Add {currentCfg.label} Trip</h3>
                     </div>
 
                     {/* Section: Vehicle */}
@@ -610,11 +610,11 @@ function TripsTab() {
                 {/* ── Existing Trips List ── */}
                 <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                        <h3 className="text-white font-semibold">Trips ({displayedTrips.length})</h3>
-                        <div className="flex gap-1 bg-dark-800/60 p-1 rounded-lg border border-white/5">
+                        <h3 className="text-gray-900 dark:text-white font-semibold">Trips ({displayedTrips.length})</h3>
+                        <div className="flex gap-1 bg-gray-100 dark:bg-dark-800/60 p-1 rounded-lg border border-gray-200 dark:border-white/5">
                             {['ALL', 'FLIGHT', 'TRAIN', 'BUS'].map(f => (
                                 <button key={f} type="button" onClick={() => setTripFilter(f)}
-                                    className={`text-xs px-2.5 py-1 rounded-md transition-all ${tripFilter === f ? 'bg-primary-600 text-white font-semibold' : 'text-gray-500 hover:text-gray-300'}`}>
+                                    className={`text-xs px-2.5 py-1 rounded-md transition-all ${tripFilter === f ? 'bg-primary-600 text-white font-semibold' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'}`}>
                                     {f === 'ALL' ? 'All' : MODE_CONFIG[f].label}
                                 </button>
                             ))}
@@ -624,13 +624,13 @@ function TripsTab() {
                         {displayedTrips.map(t => {
                             const cfg = MODE_CONFIG[t.transportMode] || MODE_CONFIG.FLIGHT
                             return (
-                                <div key={t.id} className="flex items-center justify-between p-3.5 bg-dark-700 rounded-xl hover:bg-dark-600/80 transition-colors group">
+                                <div key={t.id} className="flex items-center justify-between p-3.5 bg-white dark:bg-dark-700 border border-gray-100 dark:border-transparent rounded-xl hover:border-primary-500/30 transition-colors group shadow-sm dark:shadow-none">
                                     <div className="flex items-center gap-3 min-w-0">
                                         <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${t.transportMode === 'FLIGHT' ? 'bg-sky-500/15 text-sky-400' : t.transportMode === 'TRAIN' ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'}`}>
                                             {cfg.icon}
                                         </div>
                                         <div className="min-w-0">
-                                            <p className="text-white text-sm font-medium truncate">{t.originStation?.city} → {t.destinationStation?.city}</p>
+                                            <p className="text-gray-900 dark:text-white text-sm font-medium truncate">{t.originStation?.city} → {t.destinationStation?.city}</p>
                                             <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                                                 <span className={cfg.badge}>{cfg.label}</span>
                                                 <span className="text-gray-500 text-xs">₹{Number(t.price).toLocaleString('en-IN')}</span>
@@ -677,10 +677,10 @@ function BookingsTab() {
                     ) : bookings.length === 0 ? (
                         <tr><td colSpan={5} className="py-8 text-center text-gray-600">No bookings yet</td></tr>
                     ) : bookings.map(b => (
-                        <tr key={b.id} className="text-gray-300">
-                            <td className="py-3 pr-4 font-mono text-white">#{b.id}</td>
+                        <tr key={b.id} className="text-gray-800 dark:text-gray-300">
+                            <td className="py-3 pr-4 font-mono text-gray-900 dark:text-white">#{b.id}</td>
                             <td className="py-3 pr-4">{b.user?.name}<br /><span className="text-gray-500 text-xs">{b.user?.email}</span></td>
-                            <td className="py-3 pr-4"><span className="text-xs font-semibold px-2 py-1 rounded-full bg-dark-600">{b.status}</span></td>
+                            <td className="py-3 pr-4"><span className="text-xs font-semibold px-2 py-1 rounded-full bg-gray-100 dark:bg-dark-600 text-gray-700 dark:text-gray-300">{b.status}</span></td>
                             <td className="py-3 pr-4 text-primary-400 font-bold">₹{Number(b.totalPrice).toLocaleString('en-IN')}</td>
                             <td className="py-3 text-gray-500 text-xs">{new Date(b.createdAt).toLocaleDateString('en-IN')}</td>
                         </tr>
@@ -709,19 +709,19 @@ function ConfigTab() {
     return (
         <div className="grid lg:grid-cols-2 gap-6">
             <form onSubmit={submit} className="glass-card p-5 space-y-4">
-                <h3 className="text-white font-semibold">Set Configuration</h3>
+                <h3 className="text-gray-900 dark:text-white font-semibold">Set Configuration</h3>
                 <Field label="Key"><Input required value={form.configKey} onChange={e => setForm({ ...form, configKey: e.target.value })} placeholder="minimum_layover_minutes" /></Field>
                 <Field label="Value"><Input required value={form.configValue} onChange={e => setForm({ ...form, configValue: e.target.value })} placeholder="120" /></Field>
                 <Field label="Description"><Input value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Minimum layover time in minutes" /></Field>
                 <button type="submit" disabled={loading} className="btn-primary w-full">Save Config</button>
             </form>
             <div className="space-y-3">
-                <h3 className="text-white font-semibold">Current Config</h3>
+                <h3 className="text-gray-900 dark:text-white font-semibold">Current Config</h3>
                 {configs.map(c => (
-                    <div key={c.configKey} className="p-3 bg-dark-700 rounded-xl">
+                    <div key={c.configKey} className="p-3 bg-white dark:bg-dark-700 border border-gray-100 dark:border-transparent rounded-xl shadow-sm dark:shadow-none">
                         <div className="flex justify-between">
-                            <span className="text-primary-400 text-xs font-mono font-semibold">{c.configKey}</span>
-                            <span className="text-white font-bold">{c.configValue}</span>
+                            <span className="text-primary-500 dark:text-primary-400 text-xs font-mono font-semibold">{c.configKey}</span>
+                            <span className="text-gray-900 dark:text-white font-bold">{c.configValue}</span>
                         </div>
                         {c.description && <p className="text-gray-500 text-xs mt-1">{c.description}</p>}
                     </div>
@@ -750,22 +750,22 @@ export default function AdminPage() {
                 <div className="mb-8 animate-slide-up">
                     <div className="flex items-center gap-3 mb-1">
                         <div className="w-8 h-8 bg-purple-500/20 border border-purple-500/30 rounded-lg flex items-center justify-center">
-                            <Settings className="w-4 h-4 text-purple-400" />
+                            <Settings className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                         </div>
-                        <h1 className="text-2xl font-bold text-white">Admin Dashboard</h1>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Admin Dashboard</h1>
                     </div>
                     <p className="text-gray-500 ml-11">Manage your Tripline platform data</p>
                 </div>
 
                 {/* Tabs */}
-                <div className="flex gap-1 flex-wrap mb-6 bg-dark-800/60 p-1.5 rounded-xl border border-white/5 w-fit">
+                <div className="flex gap-1 flex-wrap mb-6 bg-gray-100 dark:bg-dark-800/60 p-1.5 rounded-xl border border-gray-200 dark:border-white/5 w-fit shadow-sm dark:shadow-none">
                     {TABS.map(t => (
                         <button
                             key={t.id}
                             onClick={() => setTab(t.id)}
                             className={`flex items-center gap-2 text-sm px-4 py-2 rounded-lg transition-all ${tab === t.id
                                 ? 'bg-primary-600 text-white font-semibold shadow-lg shadow-primary-600/25'
-                                : 'text-gray-400 hover:text-white'
+                                : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                                 }`}
                         >
                             {t.icon}

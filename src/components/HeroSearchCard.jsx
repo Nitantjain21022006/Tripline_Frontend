@@ -102,7 +102,7 @@ function CityInput({ id, label, icon: Icon, iconColor, value, onChange, placehol
 
             <label
                 htmlFor={id}
-                className="absolute left-9 top-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide z-10 pointer-events-none"
+                className="absolute left-9 right-8 top-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide z-10 pointer-events-none truncate"
             >
                 {label}
             </label>
@@ -117,7 +117,7 @@ function CityInput({ id, label, icon: Icon, iconColor, value, onChange, placehol
                 placeholder={placeholder}
                 required
                 autoComplete="off"
-                className="input-field pl-9 pt-6 pb-2 text-sm pr-8"
+                className="input-field pl-9 pt-5 pb-1.5 h-14 text-sm pr-8 truncate"
             />
 
             {/* Clear button */}
@@ -141,7 +141,7 @@ function CityInput({ id, label, icon: Icon, iconColor, value, onChange, placehol
                             key={i}
                             type="button"
                             onMouseDown={() => handleSelect(city)}
-                            className="w-full text-left px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-dark-600 hover:text-primary-700 dark:hover:text-primary-400 transition-colors flex items-center gap-2"
+                            className="w-full text-left px-4 py-3 text-sm text-gray-800 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-dark-600 hover:text-primary-700 dark:hover:text-primary-400 transition-colors flex items-center gap-3 border-b last:border-0 border-gray-100 dark:border-white/5"
                         >
                             <MapPin className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                             {city}
@@ -164,13 +164,13 @@ function FieldSelect({ label, icon: Icon, iconColor, value, onChange, options, f
                     <Icon className={`w-4 h-4 ${iconColor}`} />
                 </div>
             )}
-            <label className={`absolute ${Icon ? 'left-9' : 'left-3'} top-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide z-10 pointer-events-none`}>
+            <label className={`absolute ${Icon ? 'left-9' : 'left-3'} right-6 top-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide z-10 pointer-events-none truncate`}>
                 {label}
             </label>
             <select
                 value={value}
                 onChange={e => onChange(e.target.value)}
-                className={`input-field ${Icon ? 'pl-9' : 'pl-3'} pt-6 pb-2 text-sm appearance-none pr-8 cursor-pointer`}
+                className={`input-field ${Icon ? 'pl-9' : 'pl-3'} pt-5 pb-1.5 h-14 text-sm appearance-none pr-8 cursor-pointer truncate`}
             >
                 {options.map(o => (
                     <option key={typeof o === 'object' ? o.id : o} value={typeof o === 'object' ? o.id : o}>
@@ -307,14 +307,14 @@ export default function HeroSearchCard() {
                 </div>
 
                 {/* ── SECOND ROW: context-sensitive fields ── */}
-                <div className={`grid gap-3 ${mode === 'COMBINED' ? 'grid-cols-2 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3'}`}>
+                <div className={`grid gap-3 ${mode === 'COMBINED' ? 'grid-cols-1 xs:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1 xs:grid-cols-2 lg:grid-cols-3'}`}>
 
                     {/* Date — always present */}
                     <div className="relative">
                         <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none">
                             <Calendar className="w-4 h-4 text-purple-500 dark:text-purple-400" />
                         </div>
-                        <label className="absolute left-9 top-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide z-10 pointer-events-none">
+                        <label className="absolute left-9 right-4 top-2 text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide z-10 pointer-events-none truncate">
                             Date
                         </label>
                         <input
@@ -323,7 +323,7 @@ export default function HeroSearchCard() {
                             min={today}
                             onChange={e => setTravelDate(e.target.value)}
                             required
-                            className="input-field pl-9 pt-6 pb-2 text-sm"
+                            className="input-field pl-9 pt-5 pb-1.5 h-14 text-sm w-full"
                         />
                     </div>
 

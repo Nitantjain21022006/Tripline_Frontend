@@ -28,74 +28,81 @@ export default function LandingPage() {
         <div className="pt-16 overflow-x-hidden">
 
             {/* ═══════════════════════════════════════
-                HERO SECTION
+                HERO SECTION (ASYMMETRICAL REDESIGN)
             ═══════════════════════════════════════ */}
-            <section className="relative min-h-[92vh] flex flex-col items-center justify-center px-4 text-center overflow-hidden">
-
-                {/* Background blobs */}
-                <div className="absolute top-16 left-0 w-[40rem] h-[40rem] bg-primary-600/8 rounded-full blur-[120px] pointer-events-none -translate-x-1/2" />
-                <div className="absolute bottom-0 right-0 w-[35rem] h-[35rem] bg-purple-600/8 rounded-full blur-[120px] pointer-events-none translate-x-1/3" />
-                <div className="absolute top-1/2 left-1/2 w-[20rem] h-[20rem] bg-sky-600/5 rounded-full blur-[80px] pointer-events-none -translate-x-1/2 -translate-y-1/2" />
-
-                <div className="relative z-10 max-w-5xl mx-auto animate-slide-up w-full">
-
-                    {/* Badge */}
-                    <div className="inline-flex items-center gap-2 bg-primary-600/10 border border-primary-500/20 text-primary-400 text-xs font-semibold px-4 py-2 rounded-full mb-7">
-                        <Zap className="w-3.5 h-3.5" />
-                        India's First Multi-Modal Travel Platform
-                        <span className="ml-1 bg-primary-500/20 text-primary-300 text-[10px] px-1.5 py-0.5 rounded-full">NEW</span>
-                    </div>
-
-                    {/* Headline */}
-                    <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-gray-900 dark:text-white leading-tight mb-5">
-                        Travel Smarter.
-                        <br />
-                        <span className="bg-gradient-to-r from-primary-400 via-sky-400 to-cyan-400 bg-clip-text text-transparent">
-                            Go Further.
-                        </span>
-                    </h1>
-
-                    <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto leading-relaxed">
-                        Combine flights, trains, and buses into one seamless multi-modal journey.
-                        Find the best route — optimized by price, time, or balance.
-                    </p>
-
-                    {/* Trust badges row */}
-                    <div className="flex flex-wrap items-center justify-center gap-3 mb-10">
-                        {TRUST_BADGES.map((t, i) => (
-                            <div key={i} className="flex items-center gap-1.5 bg-white/80 dark:bg-dark-700/80 border border-gray-200 dark:border-white/10 px-4 py-2 rounded-full text-xs shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
-                                <Star className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400 fill-amber-500 dark:fill-amber-400" />
-                                <span className="text-gray-900 dark:text-white font-bold tracking-tight">{t.label}</span>
-                                <span className="text-gray-300 dark:text-gray-600">|</span>
-                                <span className="text-gray-500 dark:text-gray-400 font-medium">{t.sub}</span>
+            <section className="relative min-h-[92vh] flex items-center pt-20 pb-16 px-4 overflow-hidden">
+                {/* Background ambient light orbs */}
+                <div className="absolute top-0 right-0 w-[45rem] h-[45rem] bg-primary-600/10 rounded-full blur-[120px] pointer-events-none translate-x-1/4 -translate-y-1/4 animate-pulse-slow" />
+                <div className="absolute bottom-10 left-0 w-[30rem] h-[30rem] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none -translate-x-1/2" />
+                
+                <div className="relative z-10 max-w-7xl mx-auto w-full">
+                    <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                        
+                        {/* LEFT: Cinematic Typography & Trust */}
+                        <div className="lg:col-span-7 flex flex-col justify-center animate-slide-up text-left">
+                            
+                            <div className="inline-flex items-center gap-2 bg-primary-600/10 border border-primary-500/20 text-primary-400 text-xs font-semibold px-4 py-2 rounded-full mb-8 w-fit shadow-sm">
+                                <Zap className="w-4 h-4" />
+                                India's First Multi-Modal Platform
+                                <span className="ml-1 bg-primary-500/20 text-primary-300 text-[10px] px-2 py-0.5 rounded-full uppercase tracking-wider">New</span>
                             </div>
-                        ))}
-                    </div>
 
-                    {/* ── MAIN SEARCH CARD ── */}
-                    <div className="text-left relative z-20 hover:shadow-2xl hover:shadow-primary-500/10 transition-shadow duration-500 rounded-3xl group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-purple-500/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        <div className="relative">
-                            <HeroSearchCard />
+                            <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-[5rem] font-black text-gray-900 dark:text-white leading-[1.1] mb-6 tracking-tight">
+                                Travel Smarter.<br/>
+                                <span className="bg-gradient-to-r from-primary-500 via-sky-400 to-indigo-500 bg-clip-text text-transparent pb-2 block">
+                                    Go Everywhere.
+                                </span>
+                            </h1>
+
+                            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-400 mb-10 max-w-2xl leading-relaxed font-light">
+                                Combine flights, trains, and buses into one seamless journey. We calculate the fastest, cheapest, and most balanced routes instantly.
+                            </p>
+
+                            {/* Trust badges row */}
+                            <div className="flex flex-wrap items-center gap-4 mb-12">
+                                {TRUST_BADGES.map((t, i) => (
+                                    <div key={i} className="flex items-center gap-2 bg-white/60 dark:bg-dark-700/60 backdrop-blur-md border border-gray-200 dark:border-white/10 px-4 py-2.5 rounded-2xl text-xs hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group cursor-default">
+                                        <div className="w-6 h-6 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                            <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                                        </div>
+                                        <div>
+                                            <div className="text-gray-900 dark:text-white font-bold tracking-tight">{t.label}</div>
+                                            <div className="text-gray-500 dark:text-gray-400 text-[10px] font-medium leading-none mt-0.5">{t.sub}</div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Stats row */}
+                            <div className="grid grid-cols-4 gap-4 max-w-xl">
+                                {STATS.map(s => (
+                                    <div key={s.label} className="group p-4 bg-white/40 dark:bg-dark-800/40 backdrop-blur-sm rounded-2xl border border-white/40 dark:border-white/5 hover:bg-white/60 dark:hover:bg-dark-700/50 transition-colors shadow-sm cursor-default">
+                                        <div className="text-2xl mb-2 group-hover:-translate-y-1.5 transition-transform duration-300 shadow-sm inline-block rounded-xl bg-white/50 dark:bg-white/5 px-2 py-1 border border-white/20">{s.emoji}</div>
+                                        <div className="text-2xl font-black text-gray-900 dark:text-white tracking-tight">{s.value}</div>
+                                        <div className="text-[10px] font-bold text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-widest">{s.label}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Stats row */}
-                    <div className="grid grid-cols-4 gap-4 mt-10 max-w-lg mx-auto">
-                        {STATS.map(s => (
-                            <div key={s.label} className="text-center group p-4 rounded-2xl hover:bg-white/50 dark:hover:bg-dark-800/40 transition-colors">
-                                <div className="text-2xl mb-1.5 group-hover:-translate-y-1 transition-transform">{s.emoji}</div>
-                                <div className="text-2xl font-black text-gray-900 dark:text-white">{s.value}</div>
-                                <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-wider">{s.label}</div>
+                        {/* RIGHT: Floating Search Card */}
+                        <div className="lg:col-span-5 relative mt-10 lg:mt-0 fade-in delay-200">
+                            {/* Decorative background plate behind card */}
+                            <div className="absolute inset-0 bg-gradient-to-tr from-primary-500/20 to-sky-400/20 rounded-[2.5rem] rotate-3 scale-105 blur-lg opacity-60" />
+                            <div className="absolute inset-0 bg-gradient-to-bl from-purple-500/20 to-indigo-400/20 rounded-[2.5rem] -rotate-3 scale-105 blur-lg opacity-60" />
+                            
+                            <div className="relative z-20 transition-transform duration-500 hover:-translate-y-2">
+                                <HeroSearchCard />
                             </div>
-                        ))}
+                        </div>
+                        
                     </div>
                 </div>
 
-                {/* Scroll indicator */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 animate-bounce-subtle">
-                    <div className="w-px h-8 bg-gradient-to-b from-transparent to-gray-600" />
-                    <div className="text-[10px] text-gray-600 tracking-widest uppercase">Scroll</div>
+                {/* Subtle Scroll Hint */}
+                <div className="absolute bottom-6 left-8 hidden lg:flex items-center gap-3 animate-bounce-subtle opacity-60">
+                    <div className="w-px h-12 bg-gradient-to-b from-primary-500 to-transparent" />
+                    <span className="text-[10px] font-bold text-gray-500 tracking-[0.2em] uppercase writing-vertical-rl rotate-180">Explore More</span>
                 </div>
             </section>
 

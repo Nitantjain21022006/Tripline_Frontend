@@ -94,8 +94,8 @@ export default function PopularRoutes() {
 
                             {/* Price + bookings */}
                             <div className="flex items-center justify-between">
-                                <span className="text-primary-400 font-bold text-sm">From {r.price}</span>
-                                <span className="text-gray-600 text-[11px]">{r.bookings.toLocaleString()} trips</span>
+                                <span className="text-primary-600 dark:text-primary-400 font-bold text-sm">From {r.price}</span>
+                                <span className="text-gray-500 dark:text-gray-500 text-[11px]">{r.bookings.toLocaleString()} trips</span>
                             </div>
                         </button>
                     ))}

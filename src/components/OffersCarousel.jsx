@@ -64,20 +64,22 @@ export default function OffersCarousel() {
     return (
         <section className="py-4 px-4 relative z-10">
             <div className="max-w-7xl mx-auto">
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
                     <div>
-                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <Tag className="w-5 h-5 text-primary-400" />
+                        <div className="inline-flex items-center gap-2 bg-primary-500/10 text-primary-500 text-[10px] font-black uppercase tracking-[0.2em] px-3 py-1 rounded-full mb-3">
+                            <Zap className="w-3 h-3" /> Exclusive
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-black text-gray-900 dark:text-white tracking-tight flex items-center gap-3">
                             Offers For You
                         </h2>
-                        <p className="text-gray-500 text-sm mt-1">Exclusive deals just for Tripline users</p>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 max-w-md">Deals and discounts curated for the Tripline community. Plan your next journey for less.</p>
                     </div>
                     <div className="flex gap-2">
-                        <button onClick={() => scroll(-1)} className="w-9 h-9 bg-dark-700 border border-white/10 rounded-xl flex items-center justify-center hover:bg-dark-600 hover:border-white/20 transition-all hover:scale-105 active:scale-95">
-                            <ChevronLeft className="w-4 h-4 text-gray-300" />
+                        <button onClick={() => scroll(-1)} className="w-11 h-11 bg-white dark:bg-dark-700 border border-gray-200 dark:border-white/10 rounded-2xl flex items-center justify-center hover:bg-gray-50 dark:hover:bg-dark-600 hover:border-primary-500/30 transition-all hover:scale-105 active:scale-95 shadow-sm">
+                            <ChevronLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                         </button>
-                        <button onClick={() => scroll(1)} className="w-9 h-9 bg-dark-700 border border-white/10 rounded-xl flex items-center justify-center hover:bg-dark-600 hover:border-white/20 transition-all hover:scale-105 active:scale-95">
-                            <ChevronRight className="w-4 h-4 text-gray-300" />
+                        <button onClick={() => scroll(1)} className="w-11 h-11 bg-white dark:bg-dark-700 border border-gray-200 dark:border-white/10 rounded-2xl flex items-center justify-center hover:bg-gray-50 dark:hover:bg-dark-600 hover:border-primary-500/30 transition-all hover:scale-105 active:scale-95 shadow-sm">
+                            <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />
                         </button>
                     </div>
                 </div>
@@ -94,27 +96,30 @@ export default function OffersCarousel() {
                                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
                                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/10 rounded-full translate-y-1/2 -translate-x-1/2" />
 
-                                <div className="relative z-10">
-                                    <div className="flex items-start justify-between mb-3">
-                                        <span className="text-[10px] font-black tracking-widest bg-white/20 text-white px-2.5 py-1 rounded-full border border-white/20">
+                                <div className="relative z-10 flex flex-col h-full">
+                                    <div className="flex items-start justify-between mb-4">
+                                        <span className="text-[10px] font-black tracking-[0.15em] bg-black/20 backdrop-blur-sm text-white px-3 py-1.5 rounded-full border border-white/10">
                                             {offer.badge}
                                         </span>
-                                        <div className="w-9 h-9 bg-white/15 rounded-xl flex items-center justify-center">
+                                        <div className="w-11 h-11 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/10">
                                             <Icon className="w-5 h-5 text-white" />
                                         </div>
                                     </div>
 
-                                    <h3 className="text-white font-bold text-base leading-snug mb-1">{offer.title}</h3>
-                                    <p className="text-white/70 text-xs leading-relaxed mb-4">{offer.desc}</p>
+                                    <div className="flex-1">
+                                        <h3 className="text-white font-black text-xl leading-tight mb-2 tracking-tight">{offer.title}</h3>
+                                        <p className="text-white/80 text-xs leading-relaxed mb-6 font-medium">{offer.desc}</p>
+                                    </div>
 
-                                    <div className="flex items-center justify-between">
+                                    <div className="flex items-center justify-between mt-auto">
                                         <button
                                             onClick={(e) => { e.stopPropagation(); copyCode(offer.code); }}
-                                            className="flex items-center gap-2 bg-white/15 hover:bg-white/25 border border-white/20 text-white font-mono text-sm font-bold px-3 py-1.5 rounded-lg transition-all active:scale-95"
+                                            className="group/btn relative flex items-center gap-2 bg-white text-gray-900 font-bold text-xs px-4 py-2.5 rounded-xl transition-all active:scale-95 shadow-lg shadow-black/10 hover:-translate-y-0.5"
                                         >
-                                            {copied === offer.code ? '✓ Copied!' : offer.code}
+                                            <Tag className="w-3.5 h-3.5 text-primary-600" />
+                                            {copied === offer.code ? '✓ Copied' : offer.code}
                                         </button>
-                                        <span className="text-[11px] text-white/50">{offer.expiry}</span>
+                                        <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">{offer.expiry}</span>
                                     </div>
                                 </div>
                             </div>

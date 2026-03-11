@@ -55,11 +55,11 @@ export default function TravelStories() {
                                 <span className="inline-block text-[10px] font-black uppercase tracking-wider text-primary-400 bg-primary-500/10 border border-primary-500/20 px-2.5 py-1 rounded-full mb-3">
                                     {s.tag}
                                 </span>
-                                <h3 className="text-gray-900 dark:text-white font-semibold text-sm leading-snug mb-2 group-hover:text-primary-500 transition-colors">
+                                <h3 className="text-white font-semibold text-sm leading-snug mb-2 group-hover:text-primary-300 transition-colors">
                                     {s.title}
                                 </h3>
-                                <p className="text-gray-500 text-xs leading-relaxed mb-4 line-clamp-2">{s.desc}</p>
-                                <div className="flex items-center justify-between text-xs text-gray-600">
+                                <p className="text-white/70 text-xs leading-relaxed mb-4 line-clamp-2">{s.desc}</p>
+                                <div className="flex items-center justify-between text-xs text-white/50">
                                     <span className="flex items-center gap-1.5">
                                         <User className="w-3 h-3" />
                                         {s.author}

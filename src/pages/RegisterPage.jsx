@@ -130,60 +130,62 @@ export default function RegisterPage() {
 
                 {/* Card */}
                 <div className="bg-white/90 dark:bg-dark-800/70 backdrop-blur-2xl border border-gray-200 dark:border-white/10 rounded-3xl p-8 shadow-xl dark:shadow-2xl shadow-black/10 dark:shadow-black/50">
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        
+                        <div className="space-y-4">
+                            <FloatInput id="reg-name" label="Full Name" value={form.name} onChange={set('name')} required autoComplete="name" />
+                            <FloatInput id="reg-email" label="Email Address" type="email" value={form.email} onChange={set('email')} required autoComplete="email" />
+                            <FloatInput id="reg-phone" label="Phone Number (optional)" type="tel" value={form.phone} onChange={set('phone')} inputMode="numeric" autoComplete="tel" />
 
-                        <FloatInput id="reg-name" label="Full Name" value={form.name} onChange={set('name')} required autoComplete="name" />
-                        <FloatInput id="reg-email" label="Email Address" type="email" value={form.email} onChange={set('email')} required autoComplete="email" />
-                        <FloatInput id="reg-phone" label="Phone Number (optional)" type="tel" value={form.phone} onChange={set('phone')} inputMode="numeric" autoComplete="tel" />
-
-                        {/* Role selector */}
-                        <div className="relative">
-                            <label className="absolute left-4 top-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500 z-10 pointer-events-none">
-                                Account Type
-                            </label>
-                            <select
-                                value={form.role}
-                                onChange={set('role')}
-                                required
-                                className="input-field pt-6 pb-2 text-sm appearance-none"
-                            >
-                                <option value="USER" className="bg-white dark:bg-dark-700">Traveler</option>
-                                <option value="ADMIN" className="bg-white dark:bg-dark-700">Administrator</option>
-                            </select>
-                        </div>
-
-                        {/* Password */}
-                        <FloatInput
-                            id="reg-password"
-                            label="Password"
-                            type={showPwd ? 'text' : 'password'}
-                            value={form.password}
-                            onChange={set('password')}
-                            required
-                            autoComplete="new-password"
-                            right={
-                                <button type="button" onClick={() => setShowPwd(v => !v)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1">
-                                    {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                </button>
-                            }
-                        />
-
-                        {/* Password strength */}
-                        {form.password.length > 0 && (
-                            <div className="flex gap-3 flex-wrap">
-                                {PWD_CHECKS.map(c => (
-                                    <span key={c.label} className={`flex items-center gap-1 text-[11px] transition-colors ${c.test(form.password) ? 'text-emerald-500' : 'text-gray-400'}`}>
-                                        <CheckCircle className="w-3 h-3" />
-                                        {c.label}
-                                    </span>
-                                ))}
+                            {/* Role selector */}
+                            <div className="relative">
+                                <label className="absolute left-4 top-2 text-[11px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 z-10 pointer-events-none">
+                                    Account Type
+                                </label>
+                                <select
+                                    value={form.role}
+                                    onChange={set('role')}
+                                    required
+                                    className="input-field pt-6 pb-2 text-sm appearance-none border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-dark-700/60"
+                                >
+                                    <option value="USER" className="bg-white dark:bg-dark-700">Traveler</option>
+                                    <option value="ADMIN" className="bg-white dark:bg-dark-700">Administrator</option>
+                                </select>
                             </div>
-                        )}
+
+                            {/* Password */}
+                            <FloatInput
+                                id="reg-password"
+                                label="Password"
+                                type={showPwd ? 'text' : 'password'}
+                                value={form.password}
+                                onChange={set('password')}
+                                required
+                                autoComplete="new-password"
+                                right={
+                                    <button type="button" onClick={() => setShowPwd(v => !v)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1">
+                                        {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
+                                }
+                            />
+
+                            {/* Password strength */}
+                            {form.password.length > 0 && (
+                                <div className="flex gap-3 flex-wrap px-1">
+                                    {PWD_CHECKS.map(c => (
+                                        <span key={c.label} className={`flex items-center gap-1 text-[11px] font-medium transition-colors ${c.test(form.password) ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                                            <CheckCircle className="w-3 h-3" />
+                                            {c.label}
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn-primary w-full flex items-center justify-center gap-2 py-3.5 text-base group mt-2"
+                            className="btn-primary w-full flex items-center justify-center gap-2 py-4 text-base group mt-2 shadow-xl shadow-primary-500/20"
                         >
                             {loading
                                 ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

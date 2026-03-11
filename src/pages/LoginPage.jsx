@@ -99,34 +99,36 @@ export default function LoginPage() {
                 {/* Card */}
                 <div className="bg-white/90 dark:bg-dark-800/70 backdrop-blur-2xl border border-gray-200 dark:border-white/10 rounded-3xl p-8 shadow-xl dark:shadow-2xl shadow-black/10 dark:shadow-black/50">
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <FloatInput
-                            id="login-email"
-                            label="Email Address"
-                            type="email"
-                            value={form.email}
-                            onChange={e => setForm({ ...form, email: e.target.value })}
-                            required
-                            autoComplete="username"
-                        />
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="space-y-5">
+                            <FloatInput
+                                id="login-email"
+                                label="Email Address"
+                                type="email"
+                                value={form.email}
+                                onChange={e => setForm({ ...form, email: e.target.value })}
+                                required
+                                autoComplete="username"
+                            />
 
-                        <FloatInput
-                            id="login-password"
-                            label="Password"
-                            type={showPwd ? 'text' : 'password'}
-                            value={form.password}
-                            onChange={e => setForm({ ...form, password: e.target.value })}
-                            required
-                            autoComplete="current-password"
-                            right={
-                                <button type="button" onClick={() => setShowPwd(v => !v)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1">
-                                    {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                </button>
-                            }
-                        />
+                            <FloatInput
+                                id="login-password"
+                                label="Password"
+                                type={showPwd ? 'text' : 'password'}
+                                value={form.password}
+                                onChange={e => setForm({ ...form, password: e.target.value })}
+                                required
+                                autoComplete="current-password"
+                                right={
+                                    <button type="button" onClick={() => setShowPwd(v => !v)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1">
+                                        {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                    </button>
+                                }
+                            />
+                        </div>
 
-                        <div className="flex justify-end">
-                            <Link to="/forgot-password" className="text-xs text-primary-500 hover:text-primary-600 dark:text-primary-400 dark:hover:text-primary-300 transition-colors font-medium">
+                        <div className="flex justify-end -mt-2">
+                            <Link to="/forgot-password" hidden={false} className="text-xs text-primary-600 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 transition-colors font-semibold">
                                 Forgot password?
                             </Link>
                         </div>
@@ -134,7 +136,7 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn-primary w-full flex items-center justify-center gap-2 py-3.5 text-base group"
+                            className="btn-primary w-full flex items-center justify-center gap-2 py-4 text-base group shadow-xl shadow-primary-500/20"
                         >
                             {loading
                                 ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
