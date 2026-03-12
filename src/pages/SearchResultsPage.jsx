@@ -26,7 +26,7 @@ function FilterPanel({ filters, onChange, routes }) {
         <div className="mb-5">
             <button
                 onClick={() => setOpen(v => !v)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-dark-700/60 border border-white/8 text-sm text-gray-300 hover:text-white hover:border-white/15 transition-all"
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white dark:bg-dark-700/60 border border-gray-200 dark:border-white/8 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-white/15 transition-all"
             >
                 <SlidersHorizontal className="w-4 h-4" />
                 Filters
@@ -130,10 +130,6 @@ export default function SearchResultsPage() {
     const [optMode, setOptMode] = useState(searchParams?.optimizationMode || 'BALANCED')
     const [filters, setFilters] = useState({ mode: '', maxPrice: null, maxTransfers: null, maxDuration: null })
 
-    useEffect(() => {
-        if (searchParams) doSearch(searchParams)
-    }, [])
-
     // Re-search instantly when optMode changes
     useEffect(() => {
         if (searchParams) {
@@ -194,7 +190,7 @@ export default function SearchResultsPage() {
                                     onClick={() => setOptMode(btn.id)}
                                     className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border transition-all duration-200 ${optMode === btn.id
                                             ? `${btn.color} scale-105`
-                                            : 'border-white/8 text-gray-500 hover:text-gray-300 hover:border-white/15'
+                                            : 'border-gray-200 dark:border-white/8 text-gray-500 hover:text-gray-800 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-white/15'
                                         }`}
                                 >
                                     <Icon className="w-3.5 h-3.5" />
@@ -213,8 +209,8 @@ export default function SearchResultsPage() {
                 {/* Results Header */}
                 {!loading && filteredRoutes.length > 0 && (
                     <div className="flex items-center justify-between mb-4 animate-fade-in">
-                        <p className="text-gray-400 text-sm">
-                            <span className="text-white font-semibold">{filteredRoutes.length}</span> routes found
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">
+                            <span className="text-gray-900 dark:text-white font-semibold">{filteredRoutes.length}</span> routes found
                             {searchParams?.originCity && searchParams?.destinationCity && ` for ${searchParams.originCity} → ${searchParams.destinationCity}`}
                         </p>
                         <div className="flex items-center gap-1.5 text-xs text-gray-600">
@@ -259,7 +255,7 @@ export default function SearchResultsPage() {
                 {!loading && routes.length > 0 && filteredRoutes.length === 0 && (
                     <div className="text-center py-16 animate-fade-in">
                         <SlidersHorizontal className="w-12 h-12 text-gray-600 mx-auto mb-3" />
-                        <h3 className="text-gray-300 font-semibold mb-1">No routes match your filters</h3>
+                        <h3 className="text-gray-800 dark:text-gray-300 font-semibold mb-1">No routes match your filters</h3>
                         <p className="text-gray-500 text-sm mb-4">Try relaxing your filter criteria</p>
                         <button onClick={() => setFilters({ mode: '', maxPrice: null, maxTransfers: null, maxDuration: null })} className="btn-outline text-sm">
                             Clear All Filters
@@ -270,10 +266,10 @@ export default function SearchResultsPage() {
                 {!loading && routes.length === 0 && searchParams && (
                     <div className="text-center py-20 animate-fade-in">
                         <AlertCircle className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                        <h3 className="text-xl font-semibold text-gray-300 mb-2">No routes found</h3>
+                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-300 mb-2">No routes found</h3>
                         <p className="text-gray-500 text-sm max-w-md mx-auto">
-                            No trips between <strong className="text-gray-300">{searchParams.originCity}</strong> and{' '}
-                            <strong className="text-gray-300">{searchParams.destinationCity}</strong> on this date.
+                            No trips between <strong className="text-gray-800 dark:text-gray-300">{searchParams.originCity}</strong> and{' '}
+                            <strong className="text-gray-800 dark:text-gray-300">{searchParams.destinationCity}</strong> on this date.
                             <br />Try a different date or nearby city.
                         </p>
                     </div>
@@ -291,7 +287,7 @@ export default function SearchResultsPage() {
                         <div className="glass-card px-6 py-4 flex items-center gap-6 shadow-2xl shadow-black/60">
                             <div>
                                 <p className="text-xs text-gray-500">Selected route total</p>
-                                <p className="text-xl font-bold text-white">₹{Number(selectedRoute.totalPrice).toLocaleString('en-IN')}</p>
+                                <p className="text-xl font-bold text-gray-900 dark:text-white">₹{Number(selectedRoute.totalPrice).toLocaleString('en-IN')}</p>
                             </div>
                             <button onClick={handleBook} className="btn-primary text-base px-8 flex items-center gap-2 group">
                                 Continue to Booking

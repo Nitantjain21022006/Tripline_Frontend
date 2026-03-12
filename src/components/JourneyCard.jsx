@@ -60,7 +60,7 @@ export default function JourneyCard({ route, onSelect, selected = false }) {
                 <div className="flex items-center justify-between gap-4">
                     {/* Left: Time + Route */}
                     <div className="flex flex-col gap-1 min-w-0">
-                        <div className="flex items-center gap-2 text-white">
+                        <div className="flex items-center gap-2 text-gray-900 dark:text-white">
                             <span className="text-xl font-bold font-mono">{formatTime(departureTime)}</span>
                             <div className="flex items-center gap-1">
                                 {uniqueModes.map((m, i) => (
@@ -99,7 +99,7 @@ export default function JourneyCard({ route, onSelect, selected = false }) {
 
                     {/* Right: Price + CTA */}
                     <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                        <div className="text-2xl font-bold text-white">
+                        <div className="text-2xl font-bold text-gray-900 dark:text-white">
                             ₹<span>{Number(totalPrice).toLocaleString('en-IN')}</span>
                         </div>
                         <button

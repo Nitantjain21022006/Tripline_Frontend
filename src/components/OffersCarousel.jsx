@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { Tag, ChevronLeft, ChevronRight, Plane, Train, Bus, Zap } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const OFFERS = [
     {
@@ -47,6 +48,30 @@ const OFFERS = [
 export default function OffersCarousel() {
     const [copied, setCopied] = useState(null)
     const scrollRef = useRef(null)
+    const navigate = useNavigate()
+
+    const handleOfferClick = (offer) => {
+        const today = new Date().toISOString().split('T')[0];
+        
+        let params = {
+            travelDate: today,
+            passengers: 1,
+            optimizationMode: 'BALANCED',
+            seatClass: 'Economy'
+        };
+
+        if (offer.id === 1) { // Flight Sale
+            params = { ...params, originCity: 'Delhi', destinationCity: 'Mumbai', transportMode: 'FLIGHT' };
+        } else if (offer.id === 2) { // New User
+            params = { ...params, originCity: 'Bangalore', destinationCity: 'Chennai', transportMode: 'BUS', seatClass: 'AC Sleeper' };
+        } else if (offer.id === 3) { // Train Weekend
+            params = { ...params, originCity: 'Mumbai', destinationCity: 'Pune', transportMode: 'TRAIN', seatClass: 'Sleeper (SL)' };
+        } else if (offer.id === 4) { // Combo
+            params = { ...params, originCity: 'Delhi', destinationCity: 'Goa' }; // COMBINED
+        }
+
+        navigate('/search', { state: { searchParams: params } });
+    }
 
     const scroll = (dir) => {
         if (scrollRef.current) {
@@ -90,6 +115,7 @@ export default function OffersCarousel() {
                         return (
                             <div
                                 key={offer.id}
+                                onClick={() => handleOfferClick(offer)}
                                 className={`flex-shrink-0 w-72 sm:w-80 snap-start rounded-2xl bg-gradient-to-br ${offer.gradient} p-5 sm:p-6 relative overflow-hidden group cursor-pointer hover:scale-[1.03] hover:-translate-y-1 shadow-lg hover:shadow-2xl hover:shadow-${offer.gradient.split('-')[2]}-500/30 transition-all duration-300`}
                             >
                                 {/* Background accent */}

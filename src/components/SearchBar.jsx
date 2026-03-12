@@ -27,17 +27,17 @@ function CityInput({ label, value, onChange, placeholder, icon, availableCities 
                     value={value}
                     onChange={e => { onChange(e.target.value); setShow(true); }}
                     placeholder={placeholder}
-                    className="input-field pl-9 text-white w-full cursor-pointer"
+                    className="input-field pl-9 w-full cursor-pointer text-gray-900 dark:text-white"
                     onFocus={() => setShow(true)}
                     autoComplete="off"
                 />
             </div>
             {show && suggestions.length > 0 && (
-                <ul className="absolute top-full mt-2 left-0 right-0 bg-dark-700 border border-white/10 rounded-xl overflow-hidden z-50 shadow-2xl animate-fade-in max-h-60 overflow-y-auto custom-scrollbar">
+                <ul className="absolute top-full mt-2 left-0 right-0 bg-white dark:bg-dark-700 border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden z-50 shadow-2xl animate-fade-in max-h-60 overflow-y-auto custom-scrollbar">
                     {suggestions.map(city => (
                         <li
                             key={city}
-                            className="flex items-center gap-2 px-4 py-3 hover:bg-dark-600 cursor-pointer transition-colors text-sm text-white"
+                            className="flex items-center gap-2 px-4 py-3 hover:bg-gray-50 dark:hover:bg-dark-600 cursor-pointer transition-colors text-sm text-gray-800 dark:text-white"
                             onMouseDown={(e) => { e.preventDefault(); onChange(city); setShow(false); }}
                         >
                             <MapPin className="w-3.5 h-3.5 text-primary-400" />
@@ -103,7 +103,7 @@ export default function SearchBar({ initialValues, onSearch, loading = false }) 
                         onClick={() => setMode(m.value)}
                         className={`flex items-center gap-1.5 text-xs font-semibold px-4 py-2 rounded-lg transition-all ${mode === m.value
                             ? 'bg-primary-600 text-white shadow-lg shadow-primary-600/25'
-                            : 'bg-dark-700 text-gray-400 hover:text-white border border-white/5'
+                            : 'bg-white dark:bg-dark-700 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-200 dark:border-white/5'
                             }`}
                     >
                         {m.icon}{m.label}
@@ -119,7 +119,7 @@ export default function SearchBar({ initialValues, onSearch, loading = false }) 
                 <button
                     type="button"
                     onClick={swapCities}
-                    className="hidden lg:flex items-center justify-center w-10 h-10 mb-0.5 rounded-full border border-white/10 text-gray-400 hover:text-white hover:border-primary-500 transition-all flex-shrink-0"
+                    className="hidden lg:flex items-center justify-center w-10 h-10 mb-0.5 rounded-full border border-gray-200 dark:border-white/10 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-white hover:border-primary-500 transition-all flex-shrink-0 bg-white dark:bg-transparent"
                 >
                     <ArrowRight className="w-4 h-4" />
                 </button>

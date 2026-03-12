@@ -52,12 +52,12 @@ export default function JourneyTimeline({ legs = [], compact = false }) {
                             {/* Origin + Departure */}
                             <div className="flex items-baseline justify-between">
                                 <div>
-                                    <span className="text-white font-semibold">{leg.originCity}</span>
+                                    <span className="text-gray-900 dark:text-white font-semibold">{leg.originCity}</span>
                                     {!compact && (
                                         <span className="text-gray-500 text-xs ml-2">{leg.originStation}</span>
                                     )}
                                 </div>
-                                <span className="text-white font-mono font-semibold text-sm">{formatTime(leg.departureTime)}</span>
+                                <span className="text-gray-900 dark:text-white font-mono font-semibold text-sm">{formatTime(leg.departureTime)}</span>
                             </div>
 
                             {/* Carrier + Mode */}
@@ -82,12 +82,12 @@ export default function JourneyTimeline({ legs = [], compact = false }) {
                             {/* Destination + Arrival */}
                             <div className="flex items-baseline justify-between">
                                 <div>
-                                    <span className="text-white font-semibold">{leg.destinationCity}</span>
+                                    <span className="text-gray-900 dark:text-white font-semibold">{leg.destinationCity}</span>
                                     {!compact && (
                                         <span className="text-gray-500 text-xs ml-2">{leg.destinationStation}</span>
                                     )}
                                 </div>
-                                <span className="text-white font-mono font-semibold text-sm">{formatTime(leg.arrivalTime)}</span>
+                                <span className="text-gray-900 dark:text-white font-mono font-semibold text-sm">{formatTime(leg.arrivalTime)}</span>
                             </div>
                         </div>
                     </div>
