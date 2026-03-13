@@ -201,9 +201,13 @@ export default function HeroSearchCard() {
 
     // Reset class to mode-appropriate default when mode changes
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (mode === 'FLIGHT') setSeatClass('Economy')
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (mode === 'TRAIN') setSeatClass('Sleeper (SL)')
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (mode === 'BUS') setSeatClass('Seater')
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (mode === 'COMBINED') setSeatClass('Economy')
     }, [mode])
 

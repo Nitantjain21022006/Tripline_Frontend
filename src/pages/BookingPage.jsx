@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { bookingApi, paymentApi, seatApi } from '../api/axios'
 import { useAuth } from '../context/AuthContext'
@@ -40,9 +40,13 @@ export default function BookingPage() {
     const [lockTimerStarted, setLockTimerStarted] = useState(false)
     const [seatMapLoading, setSeatMapLoading] = useState(false)
 
-    if (!route) { navigate('/search'); return null }
+    useEffect(() => {
+        if (!route) {
+            navigate('/search')
+        }
+    }, [route, navigate])
 
-    const legs = route.legs || []
+    const legs = route?.legs || []
     const tripIds = legs.map(l => l.tripId)
 
     // ----------------------------------------------------------------
@@ -322,11 +326,13 @@ export default function BookingPage() {
             if (firstLegSeat?.price) {
                 total += Number(firstLegSeat.price) * legs.length
             } else {
-                total += Number(route.totalPrice)
+                total += Number(route?.totalPrice || 0)
             }
         }
         return total
     })()
+
+    if (!route) return null
 
     return (
         <div className="min-h-screen pt-20 pb-16 px-4">
