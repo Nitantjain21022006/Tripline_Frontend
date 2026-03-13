@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { authApi } from '../api/axios'
 import toast from 'react-hot-toast'
-import { LogIn, Eye, EyeOff, Plane, ArrowRight, Phone, KeyRound, ChevronRight } from 'lucide-react'
+import { Eye, EyeOff, Plane, ArrowRight, Phone, KeyRound, ChevronRight } from 'lucide-react'
+import { ButtonSpinner } from '../components/Loaders'
 
 /* ───────── shared input wrapper ───────── */
 function FloatInput({ id, label, type = 'text', value, onChange, required, right, autoComplete }) {
@@ -136,11 +137,11 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="btn-primary w-full flex items-center justify-center gap-2 py-4 text-base group shadow-xl shadow-primary-500/20"
+                            className="btn-primary w-full group py-3.5 mt-6 disabled:opacity-50 disabled:bg-primary-500 disabled:border-transparent text-base flex items-center justify-center gap-2"
                         >
                             {loading
-                                ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                : <><LogIn className="w-4 h-4" /> Sign In <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" /></>
+                                ? <ButtonSpinner className="w-5 h-5 text-white" />
+                                : <>Sign In <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" /></>
                             }
                         </button>
                     </form>

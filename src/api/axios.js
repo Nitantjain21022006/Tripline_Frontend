@@ -85,20 +85,22 @@ export const seatApi = {
 export const adminApi = {
     // Carriers
     createCarrier: (data) => api.post('/admin/carriers', data),
-    getCarriers: () => api.get('/admin/carriers'),
+    getCarriers: (params) => api.get('/admin/carriers', { params }),
     deleteCarrier: (id) => api.delete(`/admin/carriers/${id}`),
     // Vehicles
     createVehicle: (data) => api.post('/admin/vehicles', data),
-    getVehicles: () => api.get('/admin/vehicles'),
+    getVehicles: (params) => api.get('/admin/vehicles', { params }),
+    deleteVehicle: (id) => api.delete(`/admin/vehicles/${id}`),
     // Stations
     createStation: (data) => api.post('/admin/stations', data),
-    getStations: () => api.get('/admin/stations'),
+    getStations: (params) => api.get('/admin/stations', { params }),
+    deleteStation: (id) => api.delete(`/admin/stations/${id}`),
     // Trips
     createTrip: (data) => api.post('/admin/trips', data),
-    getTrips: () => api.get('/admin/trips'),
+    getTrips: (params) => api.get('/admin/trips', { params }),
     deleteTrip: (id) => api.delete(`/admin/trips/${id}`),
     // Bookings
-    getAllBookings: () => api.get('/admin/bookings'),
+    getAllBookings: (params) => api.get('/admin/bookings', { params }),
     // Config
     upsertConfig: (data) => api.post('/admin/config', data),
     getConfigs: () => api.get('/admin/config'),

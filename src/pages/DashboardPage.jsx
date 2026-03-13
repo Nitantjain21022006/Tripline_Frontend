@@ -9,6 +9,7 @@ import {
     User, Settings, LogOut
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { SectionLoader } from '../components/Loaders'
 
 const STATUS_STYLES = {
     PAID: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',

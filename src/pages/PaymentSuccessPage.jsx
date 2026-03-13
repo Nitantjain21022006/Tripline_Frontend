@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react'
-import { useSearchParams, Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { useSearchParams, useNavigate, Link } from 'react-router-dom'
 import { bookingApi, ticketApi } from '../api/axios'
-import JourneyTimeline from '../components/JourneyTimeline'
-import { CheckCircle, Download, LayoutDashboard, Ticket as TicketIcon, QrCode, ArrowRight } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { CheckCircle, CheckCircle2, Ticket, ArrowRight, Home, LayoutDashboard, Download } from 'lucide-react'
+import { PageLoader } from '../components/Loaders'
 
 export default function PaymentSuccessPage() {
     const [params] = useSearchParams()
+    const navigate = useNavigate()
     const [booking, setBooking] = useState(null)
     const [loading, setLoading] = useState(true)
+    const [error, setError] = useState(false)
 
     useEffect(() => {
         // The booking is confirmed via webhook. We poll once to get it.
@@ -25,6 +26,7 @@ export default function PaymentSuccessPage() {
                 }
             } catch {
                 setLoading(false)
+                setError(true)
             }
         }
         fetchBooking()
@@ -41,18 +43,20 @@ export default function PaymentSuccessPage() {
             a.click()
             window.URL.revokeObjectURL(url)
         } catch (err) {
-            toast.error('Failed to download ticket. Please try again.')
+            // toast.error('Failed to download ticket. Please try again.') // Removed toast
+            console.error('Failed to download ticket:', err)
         }
     }
 
     return (
         <div className="min-h-screen pt-24 pb-16 px-4 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-emerald-900/20 via-transparent to-transparent">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-xl mx-auto pt-20 px-4">
                 {loading ? (
-                    <div className="glass-card p-12 text-center space-y-4 mt-8">
-                        <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto" />
-                        <h2 className="text-2xl font-bold text-white mb-2">Verifying Payment...</h2>
-                        <p className="text-emerald-400 font-medium">Securing your journey and generating tickets.</p>
+                    <PageLoader />
+                ) : error ? (
+                    <div className="glass-card p-12 text-center border-red-500/20">
+                        <p className="text-gray-400 mb-6">We're taking a bit longer than expected to confirm your payment.</p>
+                        <button onClick={() => navigate('/dashboard')} className="btn-primary py-3 px-8">Go to Dashboard</button>
                     </div>
                 ) : booking ? (
                     <div className="animate-fade-in">

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
-import { Mail, ArrowRight, ShieldCheck } from 'lucide-react'
+import { Mail, ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react'
+import { authApi } from '../api/axios'
+import { ButtonSpinner } from '../components/Loaders'
 
 export default function VerifyEmailPage() {
     const { verifyEmail } = useAuth()
@@ -72,16 +74,12 @@ export default function VerifyEmailPage() {
                     <button
                         type="submit"
                         disabled={loading || otp.length !== 6}
-                        className="btn-primary w-full flex items-center justify-center gap-2 py-4"
+                        className="btn-primary w-full group py-3.5 mt-8 disabled:opacity-50 disabled:bg-primary-500 disabled:border-transparent flex items-center justify-center gap-2"
                     >
-                        {loading ? (
-                            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                            <>
-                                <ShieldCheck className="w-5 h-5" />
-                                <span>Verify & Continue</span>
-                            </>
-                        )}
+                        {loading 
+                            ? <ButtonSpinner />
+                            : <>Verify Email <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
+                        }
                     </button>
 
                     <div className="text-center">

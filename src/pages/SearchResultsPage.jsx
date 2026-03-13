@@ -4,6 +4,7 @@ import { searchApi } from '../api/axios'
 import SearchBar from '../components/SearchBar'
 import JourneyCard from '../components/JourneyCard'
 import toast from 'react-hot-toast'
+import { RouteSkeleton } from '../components/Loaders'
 import {
     SlidersHorizontal, AlertCircle, Zap, Coins, Scale, X,
     Plane, Train, Bus, ChevronDown, ChevronUp, BarChart2
@@ -220,20 +221,10 @@ export default function SearchResultsPage() {
                     </div>
                 )}
 
-                {/* Loading Skeleton */}
+                {/* LOADER */}
                 {loading && (
-                    <div className="space-y-4">
-                        {[1, 2, 3].map(i => (
-                            <div key={i} className="glass-card p-5 animate-pulse">
-                                <div className="flex justify-between items-center">
-                                    <div className="space-y-2">
-                                        <div className="h-6 w-40 bg-dark-600 rounded-lg" />
-                                        <div className="h-4 w-28 bg-dark-600 rounded-lg" />
-                                    </div>
-                                    <div className="h-10 w-24 bg-dark-600 rounded-xl" />
-                                </div>
-                            </div>
-                        ))}
+                    <div className="py-12">
+                        <RouteSkeleton />
                     </div>
                 )}
 
