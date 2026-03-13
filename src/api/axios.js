@@ -15,8 +15,8 @@ api.interceptors.response.use(
         if (error.response?.status === 401) {
             // Do not redirect if the original request was to /auth/me
             // This is necessary because AuthContext checks /auth/me on every page load
-            const url = error.config?.url;
-            if (url && url.includes('/auth/me')) {
+            const url = error.config?.url || '';
+            if (url.endsWith('/auth/me')) {
                 return Promise.reject(error);
             }
 
