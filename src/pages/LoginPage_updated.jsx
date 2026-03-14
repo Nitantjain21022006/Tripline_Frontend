@@ -22,6 +22,7 @@ function getPasswordStrength(password) {
     return { level: 'Strong', color: 'bg-green-500', width: '100%' }
 }
 
+
 /* ───────── shared input wrapper ───────── */
 function FloatInput({ id, label, type = 'text', value, onChange, required, right, autoComplete }) {
     return (
