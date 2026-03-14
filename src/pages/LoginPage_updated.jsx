@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { authApi } from '../api/axios'
 import toast from 'react-hot-toast'
-import { Eye, EyeOff, Plane, ArrowRight, Phone, KeyRound, ChevronRight, Lock, Mail } from 'lucide-react'
+import { Eye, EyeOff, Plane, ArrowRight, Phone, KeyRound, ChevronRight, Lock } from 'lucide-react'
 import { ButtonSpinner } from '../components/Loaders'
 
 /* ───────── password strength calculator ───────── */
@@ -23,7 +23,7 @@ function getPasswordStrength(password) {
 }
 
 /* ───────── shared input wrapper ───────── */
-function FloatInput({ id, label, type = 'text', value, onChange, required, right, left, autoComplete }) {
+function FloatInput({ id, label, type = 'text', value, onChange, required, right, autoComplete }) {
     return (
         <div className="relative">
             <input
@@ -34,35 +34,29 @@ function FloatInput({ id, label, type = 'text', value, onChange, required, right
                 placeholder=" "
                 required={required}
                 autoComplete={autoComplete}
-                className={`
+                className="
                     peer w-full
                     bg-gray-50 dark:bg-dark-700/60
                     border border-gray-200 dark:border-white/8
                     text-gray-900 dark:text-white
                     placeholder-transparent
-                    pt-6 pb-2
+                    px-4 pt-6 pb-2
                     rounded-xl
                     focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500/30
                     transition-all duration-200 text-sm
-                    ${left ? 'pl-10' : 'px-4'} pr-11
-                `}
+                    pr-11
+                "
             />
-            {left && (
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 peer-focus:text-primary-500 transition-colors">
-                    {left}
-                </div>
-            )}
             <label
                 htmlFor={id}
                 className="
-                    absolute top-2
+                    absolute left-4 top-2
                     text-[11px] font-semibold uppercase tracking-wider
                     text-gray-400 dark:text-gray-500
                     peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-sm peer-placeholder-shown:font-normal peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal peer-placeholder-shown:text-gray-400
                     peer-focus:top-2 peer-focus:text-[11px] peer-focus:font-semibold peer-focus:uppercase peer-focus:tracking-wider peer-focus:text-primary-500
                     transition-all duration-200 pointer-events-none
                 "
-                style={{ left: left ? '2.5rem' : '1rem' }}
             >
                 {label}
             </label>
@@ -138,7 +132,6 @@ export default function LoginPage() {
                                 onChange={e => setForm({ ...form, email: e.target.value })}
                                 required
                                 autoComplete="username"
-                                left={<Mail className="w-4 h-4" />}
                             />
 
                             <div>
@@ -150,7 +143,6 @@ export default function LoginPage() {
                                     onChange={e => setForm({ ...form, password: e.target.value })}
                                     required
                                     autoComplete="current-password"
-                                    left={<Lock className="w-4 h-4" />}
                                     right={
                                         <button type="button" onClick={() => setShowPwd(v => !v)} className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1">
                                             {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}

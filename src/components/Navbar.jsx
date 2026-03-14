@@ -46,7 +46,7 @@ export default function Navbar() {
                     </Link>
 
                     {/* Desktop Nav Links */}
-                    <div className="hidden md:flex items-center gap-1">
+                    <div className={`hidden md:flex items-center ${!isAuthenticated ? 'absolute left-1/2 -translate-x-1/2' : ''} gap-1`}>
                         <Link to="/" className={navLinkClass('/')}>Home</Link>
                         <Link to="/search" className={navLinkClass('/search')}>Search</Link>
                         {isAuthenticated && <Link to="/dashboard" className={navLinkClass('/dashboard')}>My Trips</Link>}
