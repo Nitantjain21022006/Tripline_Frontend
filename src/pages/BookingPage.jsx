@@ -340,7 +340,7 @@ export default function BookingPage() {
 
                 {/* Step indicator */}
                 <div className="mb-8 animate-slide-up">
-                    <h1 className="text-3xl font-bold text-white mb-4">Complete Booking</h1>
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Complete Booking</h1>
                     <div className="flex items-center gap-2">
                         {STEPS.map((s, i) => (
                             <div key={i} className="flex items-center">
@@ -373,7 +373,7 @@ export default function BookingPage() {
                                                 <div className="w-8 h-8 bg-primary-600/20 border border-primary-500/30 rounded-full flex items-center justify-center">
                                                     <User className="w-4 h-4 text-primary-400" />
                                                 </div>
-                                                <h3 className="text-white font-semibold">Passenger {i + 1}</h3>
+                                                <h3 className="text-gray-900 dark:text-white font-semibold">Passenger {i + 1}</h3>
                                             </div>
                                             {i > 0 && (
                                                 <button type="button" onClick={() => removePassenger(i)}
@@ -384,19 +384,19 @@ export default function BookingPage() {
                                         </div>
                                         <div className="grid sm:grid-cols-3 gap-4">
                                             <div className="sm:col-span-1">
-                                                <label className="block text-xs text-gray-500 uppercase tracking-wider mb-1.5 font-semibold">Full Name</label>
+                                                <label className="block text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5 font-semibold">Full Name</label>
                                                 <input type="text" required value={p.name}
                                                     onChange={e => setField(i, 'name', e.target.value)}
                                                     className="input-field" placeholder="Full name" />
                                             </div>
                                             <div>
-                                                <label className="block text-xs text-gray-500 uppercase tracking-wider mb-1.5 font-semibold">Age</label>
+                                                <label className="block text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5 font-semibold">Age</label>
                                                 <input type="number" min="1" max="120" value={p.age || ''}
                                                     onChange={e => setField(i, 'age', e.target.value)}
                                                     className="input-field" placeholder="Age" />
                                             </div>
                                             <div>
-                                                <label className="block text-xs text-gray-500 uppercase tracking-wider mb-1.5 font-semibold">Gender</label>
+                                                <label className="block text-xs text-gray-600 dark:text-gray-400 uppercase tracking-wider mb-1.5 font-semibold">Gender</label>
                                                 <select value={p.gender} onChange={e => setField(i, 'gender', e.target.value)} className="input-field">
                                                     <option value="MALE">Male</option>
                                                     <option value="FEMALE">Female</option>
@@ -447,7 +447,7 @@ export default function BookingPage() {
 
                                 {/* Passenger ↔ Seat mapper */}
                                 <div className="glass-card p-5">
-                                    <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+                                    <h3 className="text-gray-900 dark:text-white font-semibold mb-3 flex items-center gap-2">
                                         <MapPin className="w-4 h-4 text-primary-400" />
                                         Passenger → Seat Assignment
                                     </h3>
@@ -462,7 +462,7 @@ export default function BookingPage() {
 
                                 {/* Seat map */}
                                 <div className="glass-card p-5 overflow-auto">
-                                    <h3 className="text-white font-semibold mb-4">
+                                    <h3 className="text-gray-900 dark:text-white font-semibold mb-4">
                                         Seat Map — {legs[currentLegIdx]?.origin} → {legs[currentLegIdx]?.destination}
                                         {transportMode && <span className="ml-2 text-xs text-gray-500 bg-white/10 px-2 py-0.5 rounded">{transportMode}</span>}
                                     </h3>
@@ -482,7 +482,7 @@ export default function BookingPage() {
                                     {/* Class availability pills — shown above the map */}
                                     {currentSeatMap.availability && Object.keys(currentSeatMap.availability).length > 0 && (
                                         <div className="mb-4 flex flex-wrap gap-2">
-                                            <span className="text-xs text-gray-500 self-center font-semibold uppercase tracking-wider">Availability:</span>
+                                            <span className="text-xs text-gray-600 dark:text-gray-400 self-center font-semibold uppercase tracking-wider">Availability:</span>
                                             {Object.entries(currentSeatMap.availability).map(([cls, count]) => {
                                                 const price = currentSeatMap.classPrices?.[cls]
                                                 const isLow = count <= 5
@@ -562,22 +562,22 @@ export default function BookingPage() {
                         {step === 2 && (
                             <div className="animate-fade-in space-y-6">
                                 <div className="glass-card p-6">
-                                    <h3 className="text-white font-semibold mb-4">Booking Summary</h3>
+                                    <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Booking Summary</h3>
 
                                     {passengers.map((p, i) => {
                                         const allLegSeats = legs.map((leg, li) => (seatAssignments[li] || {})[i])
                                         return (
-                                            <div key={i} className="mb-4 last:mb-0 pb-4 last:pb-0 border-b border-white/5 last:border-0">
+                                            <div key={i} className="mb-4 last:mb-0 pb-4 last:pb-0 border-b border-gray-100 dark:border-white/5 last:border-0">
                                                 <div className="flex items-center gap-2 mb-2">
                                                     <div className="w-6 h-6 bg-primary-600/30 rounded-full flex items-center justify-center text-xs font-bold text-primary-400">{i + 1}</div>
-                                                    <span className="text-white font-semibold">{p.name}</span>
+                                                    <span className="text-gray-900 dark:text-white font-semibold">{p.name}</span>
                                                 </div>
                                                 <div className="ml-8 space-y-1">
                                                     {legs.map((leg, li) => {
                                                         const seat = allLegSeats[li]
                                                         return (
                                                             <div key={li} className="flex items-center justify-between text-sm">
-                                                                <span className="text-gray-400">{leg.origin} → {leg.destination}</span>
+                                                                <span className="text-gray-600 dark:text-gray-400">{leg.origin} → {leg.destination}</span>
                                                                 {seat ? (
                                                                     <span className="text-emerald-400 font-semibold">
                                                                         {seat.coachNo ? `${seat.coachNo}-` : ''}{seat.seatNo}
@@ -621,16 +621,16 @@ export default function BookingPage() {
                     {/* Right: Journey Summary */}
                     <div className="space-y-4">
                         <div className="glass-card p-5">
-                            <h3 className="text-white font-semibold mb-4">Journey Summary</h3>
+                            <h3 className="text-gray-900 dark:text-white font-semibold mb-4">Journey Summary</h3>
                             <JourneyTimeline legs={route.legs} compact={false} />
-                            <div className="border-t border-white/5 mt-4 pt-4 space-y-2">
+                            <div className="border-t border-gray-100 dark:border-white/5 mt-4 pt-4 space-y-2">
                                 <div className="flex justify-between text-sm">
-                                    <span className="text-gray-400">Passengers</span>
-                                    <span className="text-white">{passengers.length}</span>
+                                    <span className="text-gray-600 dark:text-gray-400">Passengers</span>
+                                    <span className="text-gray-900 dark:text-white">{passengers.length}</span>
                                 </div>
-                                <div className="flex justify-between font-bold text-white">
+                                <div className="flex justify-between font-bold text-gray-900 dark:text-white">
                                     <span>Total</span>
-                                    <span className="text-xl text-primary-400">₹{totalPrice.toLocaleString('en-IN')}</span>
+                                    <span className="text-xl text-primary-600 dark:text-primary-400">₹{totalPrice.toLocaleString('en-IN')}</span>
                                 </div>
                             </div>
                         </div>
@@ -638,15 +638,15 @@ export default function BookingPage() {
                         {/* Seat assignments summary */}
                         {step >= 1 && Object.keys(seatAssignments).length > 0 && (
                             <div className="glass-card p-4">
-                                <h4 className="text-sm font-semibold text-white mb-3">Seat Assignments</h4>
+                                <h4 className="text-sm font-semibold text-gray-900 dark:text-white mb-3">Seat Assignments</h4>
                                 {legs.map((leg, li) => {
                                     const assignments = seatAssignments[li] || {}
                                     return Object.keys(assignments).length > 0 ? (
                                         <div key={li} className="mb-2">
-                                            <div className="text-xs text-gray-500 mb-1">{leg.origin} → {leg.destination}</div>
+                                            <div className="text-xs text-gray-600 dark:text-gray-400 mb-1">{leg.origin} → {leg.destination}</div>
                                             {Object.entries(assignments).map(([pi, seat]) => (
                                                 <div key={pi} className="flex justify-between text-xs py-0.5">
-                                                    <span className="text-gray-400">{passengers[pi]?.name}</span>
+                                                    <span className="text-gray-600 dark:text-gray-400">{passengers[pi]?.name}</span>
                                                     <span className="text-emerald-400 font-semibold">
                                                         {seat.coachNo ? `${seat.coachNo}-` : ''}{seat.seatNo}
                                                     </span>
@@ -658,7 +658,7 @@ export default function BookingPage() {
                             </div>
                         )}
 
-                        <div className="glass p-4 text-xs text-gray-500 leading-relaxed">
+                        <div className="glass p-4 text-xs text-gray-600 dark:text-gray-500 leading-relaxed">
                             <CreditCard className="w-4 h-4 text-gray-400 mb-2" />
                             Payment is securely processed by Stripe. Your card details are never stored on our servers.
                         </div>
