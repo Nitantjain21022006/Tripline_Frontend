@@ -72,10 +72,13 @@ export default function SearchBar({ initialValues, onSearch, loading = false }) 
         e.preventDefault()
         if (!date) return
 
+        const pad = (n) => n.toString().padStart(2, '0')
+        const localDateString = `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
+
         const params = {
             originCity: origin,
             destinationCity: destination,
-            travelDate: date.toISOString().split('T')[0],
+            travelDate: localDateString,
             optimizationMode: mode
         }
 

@@ -29,39 +29,121 @@ erDiagram
     USER ||--o{ BOOKING : makes
     USER {
         Long id PK
+        String name
         String email UK
         String password
         String role
+        String phone_number
+        Boolean is_verified
+    }
+    BOOKING ||--|{ TICKET : contains
+    BOOKING {
+        Long id PK
+        Long user_id FK
+        BigDecimal total_price
+        String status
+        String stripe_session_id
+        String stripe_payment_intent_id
+    }
+    TRIP ||--o{ TICKET : generates
+    TICKET {
+        Long id PK
+        Long booking_id FK
+        Long trip_id FK
+        String passenger_name
+        String passenger_email
+        String passenger_phone
+        String seat_number
+        String coach_number
+        String seat_class
+        String berth_type
+        BigDecimal leg_price
+        Integer leg_order
+    }
+    CARRIER ||--o{ VEHICLE : owns
+    CARRIER {
+        Long id PK
+        String name
+        String contact_email
+        String contact_phone
+        Boolean is_active
+    }
+    VEHICLE ||--o{ TRIP : operates
+    VEHICLE {
+        Long id PK
+        Long carrier_id FK
+        String name
+        String vehicle_number
+        String transport_mode
+        Integer capacity
+        Integer total_seats
+        Boolean is_active
     }
     STATION ||--o{ TRIP : origin_of
     STATION ||--o{ TRIP : destination_of
     STATION {
         Long id PK
         String name
-        String code UK
         String city
+        String state
+        String country
+        String type
+        Boolean is_active
     }
-    VEHICLE ||--o{ TRIP : assigned_to
-    VEHICLE {
-        Long id PK
-        String name
-        Enum transport_mode
-        Integer capacity
-    }
-    TRIP ||--o{ TICKET : generates
-    TRIP ||--o{ BOOKING : contains
     TRIP {
         Long id PK
+        Long vehicle_id FK
+        Long origin_station_id FK
+        Long destination_station_id FK
         DateTime departure_time
         DateTime arrival_time
         BigDecimal price
+        Double distance
+        String transport_mode
         Integer available_seats
+        Boolean is_active
     }
-    BOOKING ||--|{ TICKET : issues
-    BOOKING {
+    TRIP ||--o{ FLIGHT_SEAT : has
+    FLIGHT_SEAT {
         Long id PK
+        Long trip_id FK
+        String seat_no
+        Integer row_no
+        String column_no
+        String seat_class
         String status
-        BigDecimal total_amount
+        BigDecimal price
+        DateTime locked_until
+    }
+    TRIP ||--o{ TRAIN_SEAT : has
+    TRAIN_SEAT {
+        Long id PK
+        Long trip_id FK
+        String coach_no
+        String seat_no
+        String berth_type
+        String seat_class
+        String status
+        BigDecimal price
+        DateTime locked_until
+    }
+    TRIP ||--o{ BUS_SEAT : has
+    BUS_SEAT {
+        Long id PK
+        Long trip_id FK
+        String seat_no
+        Integer row_no
+        String column_no
+        String seat_type
+        String status
+        BigDecimal price
+        DateTime locked_until
+    }
+    SYSTEM_CONFIG {
+        Long id PK
+        String config_key UK
+        String config_value
+        String description
     }
 ```
 

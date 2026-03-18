@@ -115,7 +115,6 @@ function CityInput({ id, label, icon: Icon, iconColor, value, onChange, placehol
                 onChange={handleChange}
                 onFocus={() => query.length > 0 && suggestions.length > 0 && setOpen(true)}
                 placeholder={placeholder}
-                required
                 autoComplete="off"
                 className="input-field pl-9 pt-5 pb-1.5 h-14 text-sm pr-8 truncate"
             />
@@ -188,7 +187,9 @@ function FieldSelect({ label, icon: Icon, iconColor, value, onChange, options, f
 ═══════════════════════════════════════════════════════ */
 export default function HeroSearchCard() {
     const navigate = useNavigate()
-    const today = new Date().toISOString().split('T')[0]
+    const pad = (n) => n.toString().padStart(2, '0')
+    const d = new Date()
+    const today = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
 
     const [mode, setMode] = useState('COMBINED')
     const [origin, setOrigin] = useState('')

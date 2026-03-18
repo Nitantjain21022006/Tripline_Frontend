@@ -129,7 +129,7 @@ export default function SearchResultsPage() {
     const [searchParams, setSearchParams] = useState(location.state?.searchParams || null)
     const [selectedRoute, setSelectedRoute] = useState(null)
     const [optMode, setOptMode] = useState(searchParams?.optimizationMode || 'BALANCED')
-    const [filters, setFilters] = useState({ mode: '', maxPrice: null, maxTransfers: null, maxDuration: null })
+    const [filters, setFilters] = useState({ mode: searchParams?.transportMode || '', maxPrice: null, maxTransfers: null, maxDuration: null })
 
     // Re-search instantly when optMode changes
     useEffect(() => {
