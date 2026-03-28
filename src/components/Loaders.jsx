@@ -54,16 +54,16 @@ export function ButtonSpinner({ className = 'w-4 h-4 text-white' }) {
 // ============================================================================
 export function RouteSkeleton() {
     return (
-        <div className="space-y-4 animate-pulse">
+        <div className="space-y-4">
             {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white dark:bg-dark-800 rounded-2xl p-5 border border-gray-200 dark:border-white/5 flex flex-col md:flex-row gap-6 md:items-center">
+                <div key={i} className="bg-white dark:bg-dark-800 rounded-2xl p-5 border border-gray-200 dark:border-white/5 flex flex-col md:flex-row gap-6 md:items-center overflow-hidden">
                     
                     {/* Carrier Info Skeleton */}
                     <div className="w-full md:w-48 flex items-center gap-4 shrink-0">
-                        <div className="w-12 h-12 rounded-xl bg-gray-200 dark:bg-dark-700 shrink-0"></div>
+                        <div className="w-12 h-12 rounded-xl bg-gray-200 dark:bg-white/10 shrink-0 shimmer"></div>
                         <div className="space-y-2 flex-1">
-                            <div className="h-4 bg-gray-200 dark:bg-dark-700 rounded-full w-24"></div>
-                            <div className="h-3 bg-gray-100 dark:bg-dark-600 rounded-full w-16"></div>
+                            <div className="h-4 bg-gray-200 dark:bg-white/10 rounded-full w-24 shimmer"></div>
+                            <div className="h-3 bg-gray-100 dark:bg-white/10 rounded-full w-16 shimmer"></div>
                         </div>
                     </div>
 
@@ -71,37 +71,81 @@ export function RouteSkeleton() {
                     <div className="flex-1 flex items-center justify-between min-w-0 px-2 md:px-6 py-4 md:py-0 border-y md:border-y-0 md:border-x border-gray-100 dark:border-white/5 relative">
                         {/* Origin */}
                         <div className="text-center w-24 shrink-0">
-                            <div className="h-5 bg-gray-200 dark:bg-dark-700 rounded-full w-16 mx-auto mb-2"></div>
-                            <div className="h-3 bg-gray-100 dark:bg-dark-600 rounded-full w-12 mx-auto"></div>
+                            <div className="h-5 bg-gray-200 dark:bg-white/10 rounded-full w-16 mx-auto mb-2 shimmer"></div>
+                            <div className="h-3 bg-gray-100 dark:bg-white/10 rounded-full w-12 mx-auto shimmer"></div>
                         </div>
 
                         {/* Line */}
                         <div className="flex-1 px-4 flex flex-col items-center justify-center">
-                            <div className="h-2 bg-gray-100 dark:bg-dark-600 rounded-full w-12 mb-2"></div>
+                            <div className="h-2 bg-gray-100 dark:bg-white/10 rounded-full w-12 mb-2 shimmer"></div>
                             <div className="w-full flex items-center relative">
-                                <div className="w-2 h-2 rounded-full bg-gray-200 dark:bg-dark-700 shrink-0"></div>
-                                <div className="h-px bg-gray-200 dark:bg-dark-700 flex-1 mx-1 border-t-2 border-dashed border-gray-200 dark:border-dark-700"></div>
-                                <div className="absolute left-1/2 -ml-3 w-6 h-6 bg-white dark:bg-dark-800 rounded-full border border-gray-200 dark:border-dark-700 flex items-center justify-center z-10">
-                                    <div className="w-3 h-3 bg-gray-200 dark:bg-dark-700 rounded-full"></div>
+                                <div className="w-2 h-2 rounded-full bg-gray-200 dark:bg-white/10 shrink-0 shimmer"></div>
+                                <div className="h-px bg-gray-200 dark:bg-white/10 flex-1 mx-1 border-t-2 border-dashed border-gray-200 dark:border-white/10 shimmer"></div>
+                                <div className="absolute left-1/2 -ml-3 w-6 h-6 bg-white dark:bg-dark-800 rounded-full border border-gray-200 dark:border-white/10 flex items-center justify-center z-10">
+                                    <div className="w-3 h-3 bg-gray-200 dark:bg-white/10 rounded-full shimmer"></div>
                                 </div>
-                                <div className="w-2 h-2 rounded-full bg-gray-200 dark:bg-dark-700 shrink-0"></div>
+                                <div className="w-2 h-2 rounded-full bg-gray-200 dark:bg-white/10 shrink-0 shimmer"></div>
                             </div>
                         </div>
 
                         {/* Destination */}
                         <div className="text-center w-24 shrink-0">
-                            <div className="h-5 bg-gray-200 dark:bg-dark-700 rounded-full w-16 mx-auto mb-2"></div>
-                            <div className="h-3 bg-gray-100 dark:bg-dark-600 rounded-full w-12 mx-auto"></div>
+                            <div className="h-5 bg-gray-200 dark:bg-white/10 rounded-full w-16 mx-auto mb-2 shimmer"></div>
+                            <div className="h-3 bg-gray-100 dark:bg-white/10 rounded-full w-12 mx-auto shimmer"></div>
                         </div>
                     </div>
 
                     {/* Price and Action Skeleton */}
                     <div className="w-full md:w-48 flex md:flex-col items-center justify-between md:justify-center gap-4 shrink-0 pl-2 md:pl-6">
                         <div className="space-y-2">
-                            <div className="h-6 bg-gray-200 dark:bg-dark-700 rounded-full w-24"></div>
-                            <div className="h-3 bg-gray-100 dark:bg-dark-600 rounded-full w-20"></div>
+                            <div className="h-6 bg-gray-200 dark:bg-white/10 rounded-full w-24 shimmer"></div>
+                            <div className="h-3 bg-gray-100 dark:bg-white/10 rounded-full w-20 shimmer"></div>
                         </div>
-                        <div className="h-10 bg-gray-200 dark:bg-dark-700 rounded-xl w-32 md:w-full"></div>
+                        <div className="h-10 bg-gray-200 dark:bg-white/10 rounded-xl w-32 md:w-full shimmer"></div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    )
+}
+
+// ============================================================================
+// STAT SKELETON - For dashboard statistics
+// ============================================================================
+export function StatSkeleton() {
+    return (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+            {[1, 2, 3, 4].map(i => (
+                <div key={i} className="glass p-4 overflow-hidden">
+                    <div className="w-9 h-9 rounded-xl bg-gray-200 dark:bg-white/10 mb-3 shimmer" />
+                    <div className="h-7 w-20 bg-gray-200 dark:bg-white/10 rounded-lg mb-2 shimmer" />
+                    <div className="h-3 w-16 bg-gray-100 dark:bg-white/10 rounded-md shimmer" />
+                </div>
+            ))}
+        </div>
+    )
+}
+
+// ============================================================================
+// BOOKING CARD SKELETON - For dashboard booking lists
+// ============================================================================
+export function BookingCardSkeleton() {
+    return (
+        <div className="space-y-4">
+            {[1, 2].map(i => (
+                <div key={i} className="glass-card p-5 overflow-hidden">
+                    <div className="flex items-center justify-between mb-2">
+                        <div className="flex-1">
+                            <div className="h-4 w-48 bg-gray-200 dark:bg-white/10 rounded-lg mb-2 shimmer" />
+                            <div className="flex gap-2">
+                                <div className="h-3 w-12 bg-gray-100 dark:bg-white/10 rounded-md shimmer" />
+                                <div className="h-3 w-16 bg-gray-100 dark:bg-white/10 rounded-md shimmer" />
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <div className="h-3 w-10 bg-gray-100 dark:bg-white/10 rounded-md mb-1 ml-auto shimmer" />
+                            <div className="h-5 w-20 bg-gray-200 dark:bg-white/10 rounded-lg shimmer" />
+                        </div>
                     </div>
                 </div>
             ))}

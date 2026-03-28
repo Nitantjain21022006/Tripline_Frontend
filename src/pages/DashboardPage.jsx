@@ -182,77 +182,75 @@ export default function DashboardPage() {
                     </div>
                 </div>
 
-                {/* ── STATS ROW ── */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-                    {[
-                        { label: 'Total Trips', value: bookings.length, icon: Ticket, color: 'text-primary-400 bg-primary-500/10' },
-                        { label: 'Active', value: activeBookings.length, icon: CheckCircle, color: 'text-emerald-400 bg-emerald-500/10' },
-                        { label: 'Past Trips', value: pastBookings.length, icon: Clock, color: 'text-gray-500 dark:text-gray-400 bg-gray-500/10' },
-                        { label: 'Total Spent', value: `₹${totalSpent.toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-amber-400 bg-amber-500/10' },
-                    ].map(s => {
-                        const Icon = s.icon
-                        return (
-                            <div key={s.label} className="glass p-4">
-                                <div className={`w-9 h-9 rounded-xl ${s.color} flex items-center justify-center mb-3`}>
-                                    <Icon className={`w-4.5 h-4.5 ${s.color.split(' ')[0]}`} />
-                                </div>
-                                <p className="text-2xl font-black text-gray-900 dark:text-white">{s.value}</p>
-                                <p className="text-gray-500 text-xs mt-0.5">{s.label}</p>
-                            </div>
-                        )
-                    })}
-                </div>
-
-                {/* ── TABS + BOOKINGS ── */}
-                <div>
-                    <div className="flex items-center gap-1 mb-5 bg-gray-100 dark:bg-dark-700/40 border border-gray-200 dark:border-white/5 p-1 rounded-xl w-fit">
-                        {TABS.map(t => (
-                            <button
-                                key={t.id}
-                                onClick={() => setTab(t.id)}
-                                className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${tab === t.id
-                                    ? 'bg-primary-600 text-white shadow-md'
-                                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-                                    }`}
-                            >
-                                {t.label}
-                                {t.id === 'upcoming' && activeBookings.length > 0 && (
-                                    <span className="ml-2 bg-white/20 text-xs px-1.5 py-0.5 rounded-full">{activeBookings.length}</span>
-                                )}
-                            </button>
-                        ))}
-                    </div>
-
-                    {loading ? (
-                        <div className="space-y-4">
-                            {[1, 2].map(i => (
-                                <div key={i} className="glass-card p-5 animate-pulse">
-                                    <div className="h-5 w-40 bg-gray-200 dark:bg-dark-600 rounded mb-2" />
-                                    <div className="h-4 w-24 bg-gray-200 dark:bg-dark-600 rounded" />
-                                </div>
-                            ))}
+                {/* ── MAIN CONTENT (STATS + BOOKINGS) ── */}
+                {loading ? (
+                    <SectionLoader message="Fetching your journey details..." />
+                ) : (
+                    <>
+                        {/* ── STATS ROW ── */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                            {[
+                                { label: 'Total Trips', value: bookings.length, icon: Ticket, color: 'text-primary-400 bg-primary-500/10' },
+                                { label: 'Active', value: activeBookings.length, icon: CheckCircle, color: 'text-emerald-400 bg-emerald-500/10' },
+                                { label: 'Past Trips', value: pastBookings.length, icon: Clock, color: 'text-gray-500 dark:text-gray-400 bg-gray-500/10' },
+                                { label: 'Total Spent', value: `₹${totalSpent.toLocaleString('en-IN')}`, icon: TrendingUp, color: 'text-amber-400 bg-amber-500/10' },
+                            ].map(s => {
+                                const Icon = s.icon
+                                return (
+                                    <div key={s.label} className="glass p-4">
+                                        <div className={`w-9 h-9 rounded-xl ${s.color} flex items-center justify-center mb-3`}>
+                                            <Icon className={`w-4.5 h-4.5 ${s.color.split(' ')[0]}`} />
+                                        </div>
+                                        <p className="text-2xl font-black text-gray-900 dark:text-white">{s.value}</p>
+                                        <p className="text-gray-500 text-xs mt-0.5">{s.label}</p>
+                                    </div>
+                                )
+                            })}
                         </div>
-                    ) : displayedBookings.length === 0 ? (
-                        <div className="glass-card p-14 text-center">
-                            <Ticket className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
-                            <h3 className="text-gray-900 dark:text-gray-300 font-semibold mb-2">
-                                {tab === 'upcoming' ? 'No upcoming trips' : 'No past trips'}
-                            </h3>
-                            <p className="text-gray-500 text-sm mb-6">
-                                {tab === 'upcoming' ? 'Plan your next multi-modal journey!' : 'Your completed trips will appear here.'}
-                            </p>
-                            {tab === 'upcoming' && (
-                                <button onClick={() => navigate('/')} className="btn-primary">
-                                    Search Routes
-                                </button>
+
+                        {/* ── TABS + BOOKINGS ── */}
+                        <div>
+                            <div className="flex items-center gap-1 mb-5 bg-gray-100 dark:bg-dark-700/40 border border-gray-200 dark:border-white/5 p-1 rounded-xl w-fit">
+                                {TABS.map(t => (
+                                    <button
+                                        key={t.id}
+                                        onClick={() => setTab(t.id)}
+                                        className={`px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${tab === t.id
+                                            ? 'bg-primary-600 text-white shadow-md'
+                                            : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                                            }`}
+                                    >
+                                        {t.label}
+                                        {t.id === 'upcoming' && activeBookings.length > 0 && (
+                                            <span className="ml-2 bg-white/20 text-xs px-1.5 py-0.5 rounded-full">{activeBookings.length}</span>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {displayedBookings.length === 0 ? (
+                                <div className="glass-card p-14 text-center">
+                                    <Ticket className="w-12 h-12 text-gray-400 dark:text-gray-600 mx-auto mb-4" />
+                                    <h3 className="text-gray-900 dark:text-gray-300 font-semibold mb-2">
+                                        {tab === 'upcoming' ? 'No upcoming trips' : 'No past trips'}
+                                    </h3>
+                                    <p className="text-gray-500 text-sm mb-6">
+                                        {tab === 'upcoming' ? 'Plan your next multi-modal journey!' : 'Your completed trips will appear here.'}
+                                    </p>
+                                    {tab === 'upcoming' && (
+                                        <button onClick={() => navigate('/')} className="btn-primary">
+                                            Search Routes
+                                        </button>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="space-y-4">
+                                    {displayedBookings.map(b => <BookingCard key={b.bookingId} booking={b} />)}
+                                </div>
                             )}
                         </div>
-                    ) : (
-                        <div className="space-y-4">
-                            {displayedBookings.map(b => <BookingCard key={b.bookingId} booking={b} />)}
-                        </div>
-                    )}
-                </div>
+                    </>
+                )}
             </div>
         </div>
     )
