@@ -6,6 +6,7 @@ import LandingPage from './pages/LandingPage'
 import SearchResultsPage from './pages/SearchResultsPage'
 import BookingPage from './pages/BookingPage'
 import PaymentSuccessPage from './pages/PaymentSuccessPage'
+import PaymentFailurePage from './pages/PaymentFailurePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
@@ -63,6 +64,9 @@ export default function App() {
         } />
         <Route path="/booking-confirmation" element={
           <ProtectedRoute><PaymentSuccessPage /></ProtectedRoute>
+        } />
+        <Route path="/payment-cancelled" element={
+          <ProtectedRoute><PaymentFailurePage /></ProtectedRoute>
         } />
         <Route path="/dashboard" element={
           <ProtectedRoute><DashboardPage /></ProtectedRoute>
