@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSearchParams, useNavigate, Link } from 'react-router-dom'
-import { bookingApi, ticketApi } from '../api/axios'
+import { bookingApi, ticketApi, paymentApi } from '../api/axios'
 import { CheckCircle, CheckCircle2, Ticket, ArrowRight, Home, LayoutDashboard, Download } from 'lucide-react'
 import { PageLoader } from '../components/Loaders'
 
@@ -10,27 +10,48 @@ export default function PaymentSuccessPage() {
     const [booking, setBooking] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(false)
+    const sessionId = params.get('session_id')
 
     useEffect(() => {
-        // The booking is confirmed via webhook. We poll once to get it.
-        const fetchBooking = async () => {
+        if (!sessionId) {
+            setLoading(false)
+            setError(true)
+            return
+        }
+
+        let retryCount = 0
+        const maxRetries = 15 // ~30 seconds total
+
+        const checkStatus = async () => {
             try {
-                const res = await bookingApi.getUserBookings()
-                const latest = res.data?.[0]
-                if (latest && latest.status === 'PAID') {
-                    setBooking(latest)
+                const res = await paymentApi.verifySession(sessionId)
+                const bookingData = res.data
+                
+                if (bookingData && bookingData.status === 'PAID') {
+                    setBooking(bookingData)
                     setLoading(false)
+                } else if (retryCount < maxRetries) {
+                    retryCount++
+                    setTimeout(checkStatus, 2000)
                 } else {
-                    // Retry in 2 seconds if not yet PAID
-                    setTimeout(fetchBooking, 2000)
+                    setLoading(false)
+                    setError(true)
                 }
-            } catch {
-                setLoading(false)
-                setError(true)
+            } catch (err) {
+                console.error('Check status error:', err)
+                // If it's a 404, maybe the session hasn't been saved yet? Retry.
+                if (retryCount < maxRetries) {
+                    retryCount++
+                    setTimeout(checkStatus, 2000)
+                } else {
+                    setLoading(false)
+                    setError(true)
+                }
             }
         }
-        fetchBooking()
-    }, [])
+        
+        checkStatus()
+    }, [sessionId])
 
     const handleDownload = async (ticketId) => {
         try {
