@@ -70,7 +70,6 @@ export const ticketApi = {
 // Payment
 export const paymentApi = {
     createSession: (data) => api.post('/payment/create-session', data),
-    verifySession: (sessionId) => api.get(`/payment/status/${sessionId}`),
 }
 
 // Seats
